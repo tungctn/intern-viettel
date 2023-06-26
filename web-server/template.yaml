@@ -50,6 +50,9 @@ Resources:
           Principal:
             Service:
             - lambda.amazonaws.com
+            AWS:
+            - !Sub arn:aws:iam::${AWS::AccountId}:role/aws-sam-cli-managed-dev-pipe-PipelineExecutionRole-F0FUBMS8P6NM
+            
           Action:
           - sts:AssumeRole
       Policies:
