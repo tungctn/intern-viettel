@@ -9,6 +9,7 @@ sam build
 ```
 
 Deploy project cloudformation
+
 Build lần đầu tiên cần chạy lệnh sau để tạo ra file config
 
 ```

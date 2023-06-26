@@ -30,8 +30,7 @@ const AuthController = {
           .status(400)
           .json({ success: false, message: "Incorrect username or password" });
 
-      // All good
-      // Return token
+      
       const accessToken = jwt.sign(
         { userId: user[0].id },
         process.env.JWT_SECRET
