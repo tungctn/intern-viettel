@@ -51,7 +51,7 @@ Resources:
             Service:
             - lambda.amazonaws.com
             AWS:
-            - !Sub arn:aws:iam::${AWS::AccountId}:role/aws-sam-cli-managed-dev-pipe-PipelineExecutionRole-F0FUBMS8P6NM
+            - !Sub arn:aws:iam::${AWS::AccountId}:user/tung-intern
             
           Action:
           - sts:AssumeRole
