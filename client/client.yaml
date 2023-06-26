@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Frontend with Amplify, React.
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+  
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Ref AWS::StackName

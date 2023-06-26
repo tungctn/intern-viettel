@@ -8,7 +8,7 @@ Resources:
   ServerStack: 
     Type: AWS::Serverless::Application
     Properties:
-      Location: web-server/template.yaml
+      Location: web-server/server.yaml
 
 
   

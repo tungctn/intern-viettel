@@ -38,7 +38,7 @@ const PostController = {
       let updatedPost = {
         title,
         description: description || "",
-        url: (url.startsWith("https://") ? url : `https://${url}`) || "",
+        url: url
         status: status || "TO LEARN",
       };
 
@@ -81,7 +81,7 @@ const PostController = {
         {
           title,
           description,
-          url: url.startsWith("https://") ? url : `https://${url}`,
+          url: url,
           status: status || "TO LEARN",
           userId: req.userId,
         },
