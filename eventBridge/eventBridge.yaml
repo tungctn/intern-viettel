@@ -17,11 +17,12 @@ Resources:
       Architectures:
       - x86_64
       Policies: # Inline policy for the Lambda function
-        - Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:*
-              Resource: "*"
+        Statement:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: "*"
+
   EventBridgeRule: 
     Type: AWS::Events::Rule
     Properties:
@@ -30,6 +31,7 @@ Resources:
       Targets:
         - Arn: !GetAtt EventBridgeFunction.Arn
           Id: EventBridge
+
   EventBridgePermission:
     Type: AWS::Lambda::Permission
     Properties:
