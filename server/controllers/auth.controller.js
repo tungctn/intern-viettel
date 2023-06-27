@@ -30,7 +30,6 @@ const AuthController = {
           .status(400)
           .json({ success: false, message: "Incorrect username or password" });
 
-      
       const accessToken = jwt.sign(
         { userId: user[0].id },
         process.env.JWT_SECRET
@@ -51,7 +50,7 @@ const AuthController = {
   },
 
   register: async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
     if (!username || !password)
       return res
         .status(400)
@@ -68,12 +67,11 @@ const AuthController = {
 
       const salt = await bcryptjs.genSalt(10);
       const hashed = await bcryptjs.hash(password, salt);
-      console.log(hashed);
-      console.log(typeof uuidv4());
       const newUser = await User.create(
         {
           username: username,
           password: hashed,
+          email: email,
         },
         (err, data) => {
           if (err) {

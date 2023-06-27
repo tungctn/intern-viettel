@@ -15,9 +15,10 @@ const AddPostModal = () => {
     description: "",
     url: "",
     status: "TO LEARN",
+    source: "",
   });
 
-  const { title, description, url } = newPost;
+  const { title, description, url, source } = newPost;
 
   const onChangeNewPostForm = (event) =>
     setNewPost({ ...newPost, [event.target.name]: event.target.value });
@@ -28,13 +29,21 @@ const AddPostModal = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const { success, message } = await addPost(newPost);
+    const response = await addPost(newPost);
+    let { success, message } = response;
+    // console.log(response);
     resetAddPostData();
     setShowToast({ show: true, message, type: success ? "success" : "danger" });
   };
 
   const resetAddPostData = () => {
-    setNewPost({ title: "", description: "", url: "", status: "TO LEARN" });
+    setNewPost({
+      title: "",
+      description: "",
+      url: "",
+      status: "TO LEARN",
+      source: "",
+    });
     setShowAddPostModal(false);
   };
 
@@ -61,6 +70,15 @@ const AddPostModal = () => {
           </Form.Group>
           <Form.Group>
             <Form.Control
+              type="text"
+              placeholder="Youtube Tutorial URL"
+              name="url"
+              value={url}
+              onChange={onChangeNewPostForm}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
               as="textarea"
               rows={3}
               placeholder="Description"
@@ -72,9 +90,9 @@ const AddPostModal = () => {
           <Form.Group>
             <Form.Control
               type="text"
-              placeholder="Youtube Tutorial URL"
-              name="url"
-              value={url}
+              placeholder="Source code URL"
+              name="source"
+              value={source}
               onChange={onChangeNewPostForm}
             />
           </Form.Group>

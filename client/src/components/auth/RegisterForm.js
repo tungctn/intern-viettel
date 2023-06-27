@@ -12,13 +12,14 @@ const RegisterForm = () => {
   // Local state
   const [registerForm, setRegisterForm] = useState({
     username: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
 
   const [alert, setAlert] = useState(null);
 
-  const { username, password, confirmPassword } = registerForm;
+  const { username, password, confirmPassword, email } = registerForm;
 
   const onChangeRegisterForm = (event) =>
     setRegisterForm({
@@ -58,6 +59,16 @@ const RegisterForm = () => {
             name="username"
             required
             value={username}
+            onChange={onChangeRegisterForm}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Control
+            type="text"
+            placeholder="Email"
+            name="email"
+            required
+            value={email}
             onChange={onChangeRegisterForm}
           />
         </Form.Group>

@@ -8,6 +8,7 @@ import {
   DELETE_POST,
   UPDATE_POST,
   FIND_POST,
+  FILTER_POST,
 } from "./constants";
 import axios from "axios";
 
@@ -33,6 +34,17 @@ const PostContextProvider = ({ children }) => {
   const getPosts = async () => {
     try {
       const response = await axios.get(`${apiUrl}/posts`);
+      if (response.data.success) {
+        dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
+      }
+    } catch (error) {
+      dispatch({ type: POSTS_LOADED_FAIL });
+    }
+  };
+
+  const getOwnPosts = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/posts/own`);
       if (response.data.success) {
         dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
       }
@@ -92,10 +104,16 @@ const PostContextProvider = ({ children }) => {
     }
   };
 
+  // filter post
+  const filterPost = (searchTerm) => {
+    dispatch({ type: FILTER_POST, payload: searchTerm });
+  };
+
   // Post context data
   const postContextData = {
     postState,
     getPosts,
+    getOwnPosts,
     showAddPostModal,
     setShowAddPostModal,
     showUpdatePostModal,
@@ -106,6 +124,7 @@ const PostContextProvider = ({ children }) => {
     deletePost,
     findPost,
     updatePost,
+    filterPost,
   };
 
   return (

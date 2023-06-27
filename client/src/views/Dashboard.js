@@ -1,6 +1,6 @@
 import { PostContext } from "../contexts/PostContext";
 import { AuthContext } from "../contexts/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
@@ -13,6 +13,7 @@ import SinglePost from "../components/posts/SinglePost";
 import AddPostModal from "../components/posts/AddPostModal";
 import UpdatePostModal from "../components/posts/UpdatePostModal";
 import addIcon from "../assets/plus-circle-fill.svg";
+import FormControl from "react-bootstrap/FormControl";
 
 const Dashboard = () => {
   // Contexts
@@ -24,16 +25,18 @@ const Dashboard = () => {
 
   const {
     postState: { post, posts, postsLoading },
-    getPosts,
+    getOwnPosts,
     setShowAddPostModal,
     showToast: { show, message, type },
     setShowToast,
+    filterPost,
   } = useContext(PostContext);
 
   // Start: Get all posts
-  useEffect(() => getPosts(), []);
+  useEffect(() => getOwnPosts(), []);
 
   let body = null;
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (postsLoading) {
     body = (
@@ -41,7 +44,7 @@ const Dashboard = () => {
         <Spinner animation="border" variant="info" />
       </div>
     );
-  } else if (posts.length === 0) {
+  } else if (!posts) {
     body = (
       <>
         <Card className="text-center mx-5 my-5">
@@ -64,8 +67,8 @@ const Dashboard = () => {
     body = (
       <>
         <Row className="row-cols-1 row-cols-md-3 g-4 mx-auto mt-3">
-          {posts.map((post) => (
-            <Col key={post._id} className="my-2">
+          {posts?.map((post) => (
+            <Col key={post.id} className="my-2">
               <SinglePost post={post} />
             </Col>
           ))}
@@ -87,6 +90,18 @@ const Dashboard = () => {
 
   return (
     <>
+      <FormControl
+        style={{ width: "60%", margin: "auto", marginTop: "30px" }}
+        type="text"
+        placeholder="Search..."
+        onChange={(event) => {
+          if (event.target.value === "") {
+            getOwnPosts();
+          }
+          filterPost(event.target.value);
+          console.log("filterPost", event.target.value);
+        }}
+      />
       {body}
       <AddPostModal />
       {post !== null && <UpdatePostModal />}

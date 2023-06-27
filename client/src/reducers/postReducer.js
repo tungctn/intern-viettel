@@ -5,6 +5,7 @@ import {
   DELETE_POST,
   UPDATE_POST,
   FIND_POST,
+  FILTER_POST,
 } from "../contexts/constants";
 
 export const postReducer = (state, action) => {
@@ -41,12 +42,32 @@ export const postReducer = (state, action) => {
 
     case UPDATE_POST:
       const newPosts = state.posts.map((post) =>
-        post._id === payload._id ? payload : post
+        post.id === payload.id ? payload : post
       );
 
       return {
         ...state,
         posts: newPosts,
+      };
+
+    case FILTER_POST:
+      const filteredPosts = state.posts.filter((post) => {
+        if (post.title.toLowerCase().includes(payload.toLowerCase())) {
+          return post;
+        }
+        if (post.description.toLowerCase().includes(payload.toLowerCase())) {
+          return post;
+        }
+        if (post.url.toLowerCase().includes(payload.toLowerCase())) {
+          return post;
+        }
+      });
+
+      console.log(filteredPosts);
+
+      return {
+        ...state,
+        posts: filteredPosts,
       };
 
     default:

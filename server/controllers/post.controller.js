@@ -1,4 +1,5 @@
 const Post = require("../models/Post");
+const { v4: uuidv4 } = require("uuid");
 
 const PostController = {
   getPosts: async (req, res) => {
@@ -26,7 +27,7 @@ const PostController = {
   },
 
   updatePost: async (req, res) => {
-    const { title, description, url, status } = req.body;
+    const { title, description, url, status, source } = req.body;
 
     // Simple validation
     if (!title)
@@ -38,27 +39,28 @@ const PostController = {
       let updatedPost = {
         title,
         description: description || "",
-        url: url
+        url: url,
         status: status || "TO LEARN",
+        source: source || "",
       };
 
       // update post
-      const postUpdateCondition = await Post.update(
-        { id: req.params.id },
-        updatedPost
-      );
+      await Post.update({ id: req.params.id }, updatedPost);
 
       // User not authorised to update post or post not found
-      if (!updatedPost)
+      if (!updatedPost) {
         return res.status(401).json({
           success: false,
           message: "Post not found or user not authorised",
         });
+      }
+
+      const updatePost = await Post.scan("id").eq(req.params.id).exec();
 
       return res.json({
         success: true,
         message: "Excellent progress!",
-        post: updatedPost,
+        post: updatePost[0],
       });
     } catch (error) {
       console.log(error);
@@ -69,7 +71,7 @@ const PostController = {
   },
 
   createPost: async (req, res) => {
-    const { title, description, url, status } = req.body;
+    const { title, description, url, status, source } = req.body;
 
     // Simple validation
     if (!title)
@@ -84,16 +86,18 @@ const PostController = {
           url: url,
           status: status || "TO LEARN",
           userId: req.userId,
+          source: source || "",
+          id: uuidv4(),
         },
         (err, post) => {
           if (err) {
             console.log(err);
             return res
-              .status(500)
-              .json({ success: false, message: "Internal server error" });
+              .status(200)
+              .json({ success: false, message: "Internal server error123" });
           } else {
             console.log(post);
-            return res.json({
+            return res.status(200).json({
               success: true,
               message: "Happy learning!",
               post,

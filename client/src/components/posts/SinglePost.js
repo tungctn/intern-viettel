@@ -4,7 +4,9 @@ import Col from "react-bootstrap/Col";
 import Badge from "react-bootstrap/Badge";
 import ActionButtons from "./ActionButtons";
 
-const SinglePost = ({ post: { id, status, title, description, url } }) => (
+const SinglePost = ({
+  post: { id, status, title, description, url, source },
+}) => (
   <Card
     className="shadow"
     border={
@@ -37,6 +39,9 @@ const SinglePost = ({ post: { id, status, title, description, url } }) => (
         </Row>
       </Card.Title>
       <Card.Text>{description}</Card.Text>
+      <Card.Link href={source} target="_blank">
+        {source}
+      </Card.Link>
     </Card.Body>
   </Card>
 );

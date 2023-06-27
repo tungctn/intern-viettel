@@ -19,7 +19,7 @@ const UpdatePostModal = () => {
 
   useEffect(() => setUpdatedPost(post), [post]);
 
-  const { title, description, url, status } = updatedPost;
+  const { title, description, url, status, source } = updatedPost;
 
   const onChangeUpdatedPostForm = (event) =>
     setUpdatedPost({ ...updatedPost, [event.target.name]: event.target.value });
@@ -35,11 +35,6 @@ const UpdatePostModal = () => {
     setShowUpdatePostModal(false);
     setShowToast({ show: true, message, type: success ? "success" : "danger" });
   };
-
-  // const resetAddPostData = () => {
-  // 	setNewPost({ title: '', description: '', url: '', status: 'TO LEARN' })
-  // 	setShowAddPostModal(false)
-  // }
 
   return (
     <Modal show={showUpdatePostModal} onHide={closeDialog}>
@@ -78,6 +73,15 @@ const UpdatePostModal = () => {
               placeholder="Youtube Tutorial URL"
               name="url"
               value={url}
+              onChange={onChangeUpdatedPostForm}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Control
+              type="text"
+              placeholder="Link source code"
+              name="source"
+              value={source}
               onChange={onChangeUpdatedPostForm}
             />
           </Form.Group>

@@ -5,7 +5,12 @@ const cors = require("cors");
 const dynamoose = require("dynamoose");
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 
 const appRouter = require("./routes/index");
 

@@ -1,17 +1,15 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
 Transform: AWS::Serverless-2016-10-31
-
 Description: 'Project intern viettel'
 
 Resources:
+
   ServerStack: 
     Type: AWS::Serverless::Application
     Properties:
-      Location: web-server/server.yaml
+      Location: server/server.yaml
 
-
-  
-
-
-     
+  EventBridgeStack:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: eventBridge/eventBridge.yaml

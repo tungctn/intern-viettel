@@ -1,6 +1,5 @@
 // translate to dynamoose
 const dynamoose = require("dynamoose");
-const { Counter, getNextId } = require("./Counter");
 const Schema = dynamoose.Schema;
 const { v4: uuidv4 } = require("uuid");
 
