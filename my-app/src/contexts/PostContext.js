@@ -9,6 +9,7 @@ import {
   UPDATE_POST,
   FIND_POST,
   FILTER_POST,
+  lambdaServerUrl,
 } from "./constants";
 import axios from "axios";
 
@@ -44,7 +45,7 @@ const PostContextProvider = ({ children }) => {
 
   const getOwnPosts = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/posts/own`);
+      const response = await axios.get(`${lambdaServerUrl}/posts/own`);
       if (response.data.success) {
         dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
       }
@@ -56,7 +57,7 @@ const PostContextProvider = ({ children }) => {
   // Add post
   const addPost = async (newPost) => {
     try {
-      const response = await axios.post(`${apiUrl}/posts`, newPost);
+      const response = await axios.post(`${lambdaServerUrl}/posts`, newPost);
       if (response.data.success) {
         dispatch({ type: ADD_POST, payload: response.data.post });
         return response.data;
@@ -71,7 +72,7 @@ const PostContextProvider = ({ children }) => {
   // Delete post
   const deletePost = async (postId) => {
     try {
-      const response = await axios.delete(`${apiUrl}/posts/${postId}`);
+      const response = await axios.delete(`${lambdaServerUrl}/posts/${postId}`);
       if (response.data.success) {
         dispatch({ type: DELETE_POST, payload: postId });
       }
@@ -90,7 +91,7 @@ const PostContextProvider = ({ children }) => {
   const updatePost = async (updatedPost) => {
     try {
       const response = await axios.put(
-        `${apiUrl}/posts/${updatedPost.id}`,
+        `${lambdaServerUrl}/posts/${updatedPost.id}`,
         updatedPost
       );
       if (response.data.success) {
