@@ -1,11 +1,8 @@
+
 const dynamoose = require("dynamoose");
 const Schema = dynamoose.Schema;
+// const uuid = require("uuid");
 const { v4: uuidv4 } = require("uuid");
-const ddb = new dynamoose.aws.ddb.DynamoDB({
-  region: "ap-southeast-1",
-});
-
-dynamoose.aws.ddb.set(ddb);
 
 const UserSchema = new Schema(
   {

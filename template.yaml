@@ -1,15 +1,19 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
-Description: 'Project intern viettel'
+Description: "Project intern viettel"
 
 Resources:
-
-  ServerStack: 
+  ServerStack:
     Type: AWS::Serverless::Application
     Properties:
-      Location: server/server.yaml
+      Location: aws-lambda-server/server.yaml
 
   EventBridgeStack:
     Type: AWS::Serverless::Application
     Properties:
-      Location: eventBridge/eventBridge.yaml
+      Location: aws-eventBridge/eventBridge.yaml
+
+  CognitoStack: 
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: aws-cognito/cognito.yaml

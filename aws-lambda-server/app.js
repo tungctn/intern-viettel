@@ -15,7 +15,7 @@ app.use(
 const appRouter = require("./routes/index");
 
 const ddb = new dynamoose.aws.ddb.DynamoDB({
-  region: "ap-south-1",
+  region: "ap-southeast-1",
 });
 
 dynamoose.aws.ddb.set(ddb);

@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Transform: AWS::Serverless-2016-10-31
 Description: >
@@ -11,22 +11,20 @@ Globals:
     TracingEnabled: true
 
 Resources:
-
   # express api rest
-  ExpressApi: 
+  ExpressApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      BinaryMediaTypes: ['*/*']
+      BinaryMediaTypes: ["*/*"]
 
   ExpressFunction:
-    Type: AWS::Serverless::Function # More infom about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       Handler: lambda.handler
       Runtime: nodejs18.x
       Architectures:
-      - x86_64
-      # connect to express api rest
+        - x86_64
       Events:
         ExpressApi:
           Type: Api
@@ -40,37 +38,33 @@ Resources:
           JWT_SECRET: "tungjav"
 
   # role for express api rest
-  ExpressFunctionRole: 
+  ExpressFunctionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
-            AWS:
-            - !Sub arn:aws:iam::${AWS::AccountId}:user/tung-intern
-            
-          Action:
-          - sts:AssumeRole
-      Policies:
-      - PolicyName: DynamoDBAccessPolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
           - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
             Action:
-            - dynamodb:*
-            Resource: "*"
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: DynamoDBAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
+                Resource: "*"
 
 Outputs:
-
   ExpressFunction:
     Description: Hello World Lambda Function ARN
     Value: !GetAtt ExpressFunction.Arn
 
   ExpressApi:
     Description: API Gateway endpoint URL for Prod stage for ExpressApi function
-    Value: !Sub 'https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+    Value: !Sub "https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

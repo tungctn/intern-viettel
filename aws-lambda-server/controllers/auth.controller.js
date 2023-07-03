@@ -7,7 +7,6 @@ const { v4: uuidv4 } = require("uuid");
 const AuthController = {
   login: async (req, res) => {
     const { username, password } = req.body;
-
     // Simple validation
     if (!username || !password)
       return res
@@ -42,10 +41,8 @@ const AuthController = {
         accessToken,
       });
     } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
+      console.log(error.message);
+      return res.status(500).json();
     }
   },
 

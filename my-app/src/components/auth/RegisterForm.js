@@ -4,10 +4,24 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import AlertMessage from "../layout/AlertMessage";
+import {
+  CognitoUserPool,
+  CognitoUserAttribute,
+  CognitoUser,
+} from "amazon-cognito-identity-js";
 
 const RegisterForm = () => {
   // Context
+  const userPoolId = "ap-south-1_yJkFCWKBe";
+  const ClientId = "5cart8upbof92fbs0omoj0q4la";
   const { registerUser } = useContext(AuthContext);
+  const poolData = {
+    UserPoolId: userPoolId, // Your user pool id here
+    ClientId: ClientId, // Your client id here
+  };
+
+  const userPool = new CognitoUserPool(poolData);
+  const attributeList = [];
 
   // Local state
   const [registerForm, setRegisterForm] = useState({
@@ -20,6 +34,35 @@ const RegisterForm = () => {
   const [alert, setAlert] = useState(null);
 
   const { username, password, confirmPassword, email } = registerForm;
+  const handleRegister = async (username, email, password) => {
+    return await new Promise((resolve, reject) => {
+      const emailData = {
+        Name: "email",
+        Value: email,
+      };
+
+      const emailAttribute = new CognitoUserAttribute(emailData);
+
+      attributeList.push(emailAttribute);
+
+      userPool.signUp(
+        email,
+        password,
+        attributeList,
+        null,
+        function (err, result) {
+          if (err) {
+            console.log(err.message);
+            reject();
+          } else {
+            const cognitoUser = result.user;
+            console.log("user name is " + cognitoUser.getUsername());
+            resolve();
+          }
+        }
+      );
+    });
+  };
 
   const onChangeRegisterForm = (event) =>
     setRegisterForm({
@@ -46,6 +89,17 @@ const RegisterForm = () => {
       console.log(error);
     }
   };
+  // const register = (event) => {
+  //   console.log("register");
+  //   event.preventDefault();
+  //   handleRegister(username, email, password)
+  //     .then((data) => {
+  //       console.log(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   return (
     <>

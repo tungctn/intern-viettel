@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   EventBridge with AWS Lambda, DynamoDB.
@@ -10,20 +10,20 @@ Globals:
 Resources:
   # event bridge
   EventBridgeFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       Handler: randomPost.handler
       Runtime: nodejs18.x
       Architectures:
-      - x86_64
+        - x86_64
       Policies: # Inline policy for the Lambda function
         Statement:
-        - Effect: Allow
-          Action:
-            - dynamodb:*
-          Resource: "*"
+          - Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: "*"
 
-  EventBridgeRule: 
+  EventBridgeRule:
     Type: AWS::Events::Rule
     Properties:
       ScheduleExpression: "cron(0 12 * * ? *)"
