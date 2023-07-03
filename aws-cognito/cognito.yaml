@@ -11,12 +11,12 @@ Globals:
     TracingEnabled: true
 
 Resources:
-  # Login api rest
   CognitoApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      BinaryMediaTypes: ["*/*"]
+      BinaryMediaTypes: 
+        - "*/*"
 
   # Login function
   FunctionCognito:
@@ -39,7 +39,7 @@ Resources:
           Type: Api
           Properties:
             Path: /{proxy+}
-            Method: POST
+            Method: ANY
             RestApiId: !Ref CognitoApi
         
       Environment:
@@ -102,3 +102,6 @@ Outputs:
 
   ExpressUserPoolClientId:
     Value: !Ref ExpressUserPoolClient
+
+  AuthApi: 
+    Value: !Ref CognitoApi

@@ -14,6 +14,4 @@ const CounterSchema = new dynamoose.Schema(
 );
 
 const Counter = dynamoose.model("counters", CounterSchema);
-
-// module.exports.counter = { Counter, getNextId };
 module.exports = Counter;

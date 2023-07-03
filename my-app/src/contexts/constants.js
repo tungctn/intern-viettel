@@ -6,6 +6,11 @@ export const apiUrl =
   // "https://vyaipngtg8.execute-api.ap-south-1.amazonaws.com/Prod/api";
   "http://localhost:3001/api";
 
+export const lambdaServerUrl =
+  "https://8hgn2i4gy6.execute-api.ap-southeast-1.amazonaws.com/Prod/api";
+export const cognitoServerUrl =
+  "https://kb1z7k3ewc.execute-api.ap-southeast-1.amazonaws.com/Prod";
+
 export const LOCAL_STORAGE_TOKEN_NAME = "learnit-mern";
 
 export const POSTS_LOADED_SUCCESS = "POSTS_LOADED_SUCCESS";
