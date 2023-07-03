@@ -1,0 +1,6 @@
+version: 0.2
+phases: 
+  build:
+    commands:
+      - sam build -t template.yaml
+      - sam deploy --stack-name intern-viettel --s3-bucket $artifact_bucket --s3-prefix intern-viettel --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM --no-confirm-changeset
