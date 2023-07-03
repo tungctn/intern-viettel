@@ -1,5 +1,23 @@
 version: 0.2
 phases: 
+
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - cd my-app
+      - npm install
+      - cd ..
+      - cd aws-lambda-server
+      - npm install
+      - cd ..
+      - cd aws-cognito
+      - npm install
+      - cd ..
+      - cd aws-eventBridge
+      - npm install
+      - cd ..
+
   build:
     commands:
       - sam build -t template.yaml
