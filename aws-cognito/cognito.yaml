@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  AWS Cognito with AWS Lambda, API Gateway, DynamoDB.
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+  CognitoApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes: 
+        - "*/*"
+
+  # Login function
+  FunctionCognito:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      # connect to login api rest
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - cognito-idp:Admin*
+              Resource: "*"
+      Events:
+        CognitoApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId: !Ref CognitoApi
+        
+      Environment:
+        Variables:
+          USER_POOL_ID: !Ref ExpressUserPool
+          CLIENT_POOL_ID: !Ref ExpressUserPoolClient
+      
+
+  # tạo cognito user pool
+  ExpressUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ExpressUserPool
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+      Schema:
+        - AttributeDataType: "String"
+          Mutable: False
+          Name: "email"
+          Required: True
+        - AttributeDataType: "String"
+          Mutable: False
+          Name: "name"
+          Required: True
+
+  # tạo cognito user pool client
+  ExpressUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: ExpressUserPoolClient
+      AllowedOAuthFlows:
+        - implicit
+      AllowedOAuthScopes:
+        - email
+        - openid
+      CallbackURLs:
+        - "https://example.com/callback"
+      AllowedOAuthFlowsUserPoolClient: True
+      UserPoolId: !Ref ExpressUserPool
+      ExplicitAuthFlows:
+        - USER_PASSWORD_AUTH
+      GenerateSecret: False
+
+  # permission cho lambda
+  AuthFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt FunctionCognito.Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt ExpressUserPool.Arn
+
+Outputs:
+  ExpressUserPoolId:
+    Value: !Ref ExpressUserPool
+
+  ExpressUserPoolClientId:
+    Value: !Ref ExpressUserPoolClient
+
+  AuthApi: 
+    Value: !Ref CognitoApi

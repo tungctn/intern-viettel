@@ -1,0 +1,10 @@
+{
+  "name": "eventBridge",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+  "dependencies": {
+    "dynamoose": "^3.2.0",
+    "uuid": "^9.0.0"
+  }
+}

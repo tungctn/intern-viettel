@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  EventBridge with AWS Lambda, DynamoDB.
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+Resources:
+  # event bridge
+  EventBridgeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: randomPost.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Policies: # Inline policy for the Lambda function
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:*
+            Resource: "*"
+
+  EventBridgeRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 12 * * ? *)"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt EventBridgeFunction.Arn
+          Id: EventBridge
+
+  EventBridgePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt EventBridgeFunction.Arn
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt EventBridgeRule.Arn
+Outputs:
+  EventBridgeFunction:
+    Description: "EventBridgeFunction"
+    Value: !GetAtt EventBridgeFunction.Arn
+    Export:
+      Name: EventBridgeFunction
