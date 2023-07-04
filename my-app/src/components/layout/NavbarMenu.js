@@ -46,6 +46,12 @@ const NavbarMenu = () => {
             as={Link}>
             Dashboard
           </Nav.Link>
+          <Nav.Link
+            className="font-weight-bolder text-white"
+            to="/profile"
+            as={Link}>
+            Profile
+          </Nav.Link>
         </Nav>
 
         <Nav>

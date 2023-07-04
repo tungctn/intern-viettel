@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Web Server with AWS Lambda, API Gateway, DynamoDB.
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+
+  ModerationFunction: 
+    Type: AWS::Serverless::Function
+    Properties: 
+      Handler: moderation.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+
+  TopicNotificationImage:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNS-Notification-Image
+      Subscription:
+        - Endpoint: !GetAtt ModerationFunction.Arn
+          Protocol: lambda
+ 
+  TopicNotificationImagePolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: SNS-Notification-Image-Policy
+        Version: "2012-10-17"
+        Statement:
+          - Sid: SNS-Notification-Image-Policy
+            Effect: Allow
+            Principal:
+              Service: rekognition.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref TopicNotificationImage
+      Topics:
+        - !Ref TopicNotificationImage
+ 
+  ModerationFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ModerationFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref TopicNotificationImage
+
+Outputs:
+  TopicNotificationImage:
+    Description: "Topic Notification Image"
+    Value: !Ref TopicNotificationImage

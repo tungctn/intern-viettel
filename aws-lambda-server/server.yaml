@@ -10,11 +10,6 @@ Globals:
   Api:
     TracingEnabled: true
 
-# Parameters:
-#   ExpressUserPool:
-#     Type: String
-#     Description: "Cognito User Pool"
-
 Resources:
   # express api rest
   ExpressApi:

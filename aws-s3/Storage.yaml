@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Web Server with AWS Lambda, API Gateway, DynamoDB.
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+Parameters:
+  TopicNotificationImage:
+    Type: String
+    Description: SNS Notification Image
+
+Resources:
+  StorageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: intern-viettel-storage-bucket
+      AccessControl: BucketOwnerFullControl
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  StorageBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StorageBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageBucket}/*
+            Principal: "*"
+          - Action:
+              - s3:PutObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageBucket}/*
+            Principal: "*"
+          - Action:
+              - s3:DeleteObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageBucket}/*
+            Principal: "*"
+
+  ImageApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes: ["*/*"]
+  
+  ImageFunction:
+    Type: AWS::Serverless::Function
+    Properties: 
+      Handler: lambda.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Role: !GetAtt ImageFunctionRole.Arn
+      Events:
+        ImageApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ImageApi
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref StorageBucket
+          SNS_TOPIC_ARN: !Ref TopicNotificationImage
+
+  ImageFunctionRole: 
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ImageFunctionRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+      - PolicyName: "ImageFunctionPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource: "*"
+      - PolicyName: "SNSPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - "sns:Publish"
+                Resource: 
+                - !Ref TopicNotificationImage
+                - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:*
+                
+  ImageFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt ImageFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref TopicNotificationImage
+
+Outputs:
+  StorageBucket:
+    Description: "Storage Bucket"
+    Value: !Ref StorageBucket
+  ImageApi:
+    Description: "Image Api"
+    Value: !Sub https://${ImageApi}.execute-api.${AWS::Region}.amazonaws.com/Prod
+  ImageFunction:
+    Description: "Image Function"
+    Value: !Ref ImageFunction
+       

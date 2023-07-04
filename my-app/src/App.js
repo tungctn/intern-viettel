@@ -7,6 +7,7 @@ import Dashboard from "./views/Dashboard";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import Home from "./views/Home";
 import PostContextProvider from "./contexts/PostContext";
+import Profile from "./components/auth/Profile";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
             <ProtectedRoute exact path="/home" component={Home} />
+            <ProtectedRoute exact path="/profile" component={Profile} />
           </Switch>
         </Router>
       </PostContextProvider>
