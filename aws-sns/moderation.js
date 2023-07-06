@@ -1,5 +1,7 @@
 const AWS = require("aws-sdk");
 const rekognition = new AWS.Rekognition({ region: "ap-southeast-1" });
+const User = require("./models/User");
+const axios = require("axios");
 
 exports.handler = async (event, context) => {
   const url = JSON.parse(event.Records[0].Sns.Message).url;
@@ -16,16 +18,33 @@ exports.handler = async (event, context) => {
         Name: name,
       },
     },
-    MaxLabels: 10,
-    MinConfidence: 70,
   };
 
   // moderation
   const moderation = await rekognition.detectModerationLabels(params).promise();
   console.log(moderation);
   const labels = moderation.ModerationLabels;
-  const labelNames = labels.map((label) => label.Name);
-  console.log(labelNames);
-  const isSafe = labelNames.includes("Explicit Nudity");
-  console.log(isSafe);
+  if (labels.length == 0) {
+    console.log("safe");
+    const user = await User.update(
+      {
+        id: user_id,
+      },
+      {
+        img: url,
+      }
+    );
+    // check if user is updated
+    if (user) {
+      console.log("User updated");
+    } else {
+      console.log("User not updated");
+    }
+  } else {
+    console.log("Labels detected: ");
+    labels.forEach((label) =>
+      console.log(label.Name + ": " + label.Confidence)
+    );
+    console.log("Unsafe");
+  }
 };

@@ -4,6 +4,7 @@ import {
   apiUrl,
   cognitoServerUrl,
   lambdaServerUrl,
+  s3ServerUrl,
   LOCAL_STORAGE_TOKEN_NAME,
 } from "./constants";
 import axios from "axios";
@@ -88,6 +89,19 @@ const AuthContextProvider = ({ children }) => {
     }
   };
 
+  const uploadImage = async (formData) => {
+    try {
+      const response = await axios.post(
+        `${s3ServerUrl}/upload/${authState?.user?.id}`,
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      if (error.response.data) return error.response.data;
+      else return { success: false, message: error.message };
+    }
+  };
+
   // Logout
   const logoutUser = () => {
     localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
@@ -98,7 +112,13 @@ const AuthContextProvider = ({ children }) => {
   };
 
   // Context data
-  const authContextData = { loginUser, registerUser, logoutUser, authState };
+  const authContextData = {
+    loginUser,
+    registerUser,
+    uploadImage,
+    logoutUser,
+    authState,
+  };
 
   // Return provider
   return (

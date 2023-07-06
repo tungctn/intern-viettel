@@ -1,22 +1,48 @@
 import React, { useState } from "react";
 import { Card, Button, Container, Row, Col, Image } from "react-bootstrap";
+import { AuthContext } from "../../contexts/AuthContext";
+import { useContext } from "react";
+import Spinner from "react-bootstrap/Spinner";
 
-export default function Profile() {
-  const user = {
-    name: "Danny McLoan",
+const Profile = () => {
+  const {
+    authState: {
+      user: { username, email, img },
+    },
+    uploadImage,
+  } = useContext(AuthContext);
+  const user1 = {
+    name: email,
     role: "Senior Journalist",
-    avatar:
-      "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp",
+    avatar: img,
     articles: 41,
     followers: 976,
     rating: 8.5,
   };
 
-  const [image, setImage] = useState(user.avatar);
+  const [image, setImage] = useState(user1.avatar);
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       setImage(URL.createObjectURL(e.target.files[0]));
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      uploadImage(formData)
+        .then((response) => {
+          console.log(response);
+          // if (response.success) {
+          setLoading(false);
+          // }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      navigator.serviceWorker.addEventListener("message", (message) => {
+        console.log(message);
+        setLoading(false);
+      });
     }
   };
 
@@ -49,27 +75,32 @@ export default function Profile() {
                         alt="Generic placeholder image"
                         fluid
                       />
+                      {loading && (
+                        <div className="d-flex justify-content-center mt-2">
+                          <Spinner animation="border" variant="info" />
+                        </div>
+                      )}
                     </label>
                   </div>
 
                   <div className="flex-grow-1 ms-3 ml-4">
-                    <Card.Title>{user.name}</Card.Title>
-                    <Card.Text>{user.role}</Card.Text>
+                    <Card.Title>{user1.name}</Card.Title>
+                    <Card.Text>{user1.role}</Card.Text>
 
                     <div
                       className="d-flex justify-content-start rounded-3 p-2 mb-2"
                       style={{ backgroundColor: "#efefef" }}>
                       <div>
                         <p className="small text-muted mb-1">Articles</p>
-                        <p className="mb-0">{user.articles}</p>
+                        <p className="mb-0">{user1.articles}</p>
                       </div>
                       <div className="px-3">
                         <p className="small text-muted mb-1">Followers</p>
-                        <p className="mb-0">{user.followers}</p>
+                        <p className="mb-0">{user1.followers}</p>
                       </div>
                       <div>
                         <p className="small text-muted mb-1">Rating</p>
-                        <p className="mb-0">{user.rating}</p>
+                        <p className="mb-0">{user1.rating}</p>
                       </div>
                     </div>
                     <div className="d-flex pt-1">
@@ -89,4 +120,6 @@ export default function Profile() {
       </Container>
     </div>
   );
-}
+};
+
+export default Profile;

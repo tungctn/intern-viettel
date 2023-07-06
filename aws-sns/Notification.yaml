@@ -10,6 +10,11 @@ Globals:
   Api:
     TracingEnabled: true
 
+Parameters:
+  Api: 
+    Type: String
+    Description: API Gateway
+
 Resources:
 
   ModerationFunction: 
@@ -23,6 +28,9 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
         - arn:aws:iam::aws:policy/AmazonRekognitionFullAccess
         - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          API: !Ref Api
 
   TopicNotificationImage:
     Type: AWS::SNS::Topic
@@ -56,7 +64,84 @@ Resources:
       Principal: sns.amazonaws.com
       SourceArn: !Ref TopicNotificationImage
 
+  SNSPlatformSetipFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+      - PolicyName: "SNSPlatformSetipFunctionPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sns:CreatePlatformApplication"
+                  - "sns:CreatePlatformEndpoint"
+                  - "sns:DeleteEndpoint"
+                  - "sns:DeletePlatformApplication"
+                  - "sns:GetEndpointAttributes"
+                  - "sns:GetPlatformApplicationAttributes"
+                  - "sns:SetEndpointAttributes"
+                  - "sns:SetPlatformApplicationAttributes"
+                  - "sns:Subscribe"
+                  - "sns:Unsubscribe"
+                Resource: "*"
+                  # - !Ref TopicNotificationImage
+                  # - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:*
+      - PolicyName: LambdaExecution
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - "logs:CreateLogGroup"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+              Resource: "arn:aws:logs:*:*:*"
+
+  SNSPlatformSetupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: createPlatform.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Role: !GetAtt SNSPlatformSetipFunctionRole.Arn
+      Environment:
+        Variables:
+          API: !Ref Api
+          # FCM_API_KEY: '{{resolve:ssm:fcm_api_key_android}}'
+
+  # SNSPlatformApplication: 
+  #   Type: Custom::SNSPlatformApplication
+  #   Properties:
+  #     ServiceToken: !GetAtt SNSPlatformSetupFunction.Arn
+  #     Platform: GCM
+  #     Name: SNS-Platform-Application
+  
+  # SNSPlatformSetupFunctionPermission:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     FunctionName: !GetAtt SNSPlatformSetupFunction.Arn
+  #     Action: lambda:InvokeFunction
+  #     Principal: sns.amazonaws.com
+  #     SourceArn: !Ref TopicNotificationImage
+
 Outputs:
   TopicNotificationImage:
     Description: "Topic Notification Image"
     Value: !Ref TopicNotificationImage
+  # SNSPlatformApplication:
+  #   Description: "SNS Platform Application"
+  #   Value: !Ref SNSPlatformApplication
+  SNSPlatformSetupFunction:
+    Description: "SNS Platform Setup Function"
+    Value: !Ref SNSPlatformSetupFunction

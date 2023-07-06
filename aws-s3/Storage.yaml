@@ -61,7 +61,7 @@ Resources:
       Runtime: nodejs18.x
       Architectures:
         - x86_64
-      Role: !GetAtt ImageFunctionRole.Arn
+      Role: !GetAtt FunctionImageRole.Arn
       Events:
         ImageApi:
           Type: Api
@@ -74,10 +74,10 @@ Resources:
           BUCKET_NAME: !Ref StorageBucket
           SNS_TOPIC_ARN: !Ref TopicNotificationImage
 
-  ImageFunctionRole: 
+  FunctionImageRole: 
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ImageFunctionRole
+      RoleName: FunctionImageRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
