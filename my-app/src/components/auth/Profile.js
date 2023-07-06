@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button, Container, Row, Col, Image } from "react-bootstrap";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useContext } from "react";
 import Spinner from "react-bootstrap/Spinner";
+import Toast from "react-bootstrap/Toast";
+import { PostContext } from "../../contexts/PostContext";
 
 const Profile = () => {
   const {
@@ -11,6 +13,7 @@ const Profile = () => {
     },
     uploadImage,
   } = useContext(AuthContext);
+
   const user1 = {
     name: email,
     role: "Senior Journalist",
@@ -19,9 +22,9 @@ const Profile = () => {
     followers: 976,
     rating: 8.5,
   };
-
   const [image, setImage] = useState(user1.avatar);
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
@@ -32,9 +35,10 @@ const Profile = () => {
       uploadImage(formData)
         .then((response) => {
           console.log(response);
-          // if (response.success) {
-          setLoading(false);
-          // }
+          if (response.success) {
+            setLoading(false);
+            setShowToast(true);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -45,6 +49,17 @@ const Profile = () => {
       });
     }
   };
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [showToast]);
 
   return (
     <div
@@ -118,6 +133,14 @@ const Profile = () => {
           </Col>
         </Row>
       </Container>
+      <Toast
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        style={{ position: "fixed", top: "20%", right: "10px" }}
+        className="bg-success text-white"
+        delay={3000}>
+        <Toast.Body>Image uploaded successfully!</Toast.Body>
+      </Toast>
     </div>
   );
 };
