@@ -30,6 +30,7 @@ app.use("/auth", router);
 router.get("/", (req, res) => {
   return res.status(200).json({
     message: "Welcome to the API",
+    dashboard: "http://localhost:3000",
   });
 });
 
