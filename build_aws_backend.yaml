@@ -20,7 +20,7 @@ phases:
       - cd aws-sns
       - npm install
       - cd ..
-
+  
   build:
     commands:
       - sam build -t template.yaml

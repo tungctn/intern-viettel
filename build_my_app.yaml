@@ -1,0 +1,24 @@
+version: 0.2
+phases: 
+
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - cd my-app
+      - npm install
+      - cd ..
+  
+  build:
+    commands:
+      - npm run build
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: 'my-app/build'
+
+cache:
+  paths:
+    - 'my-app/node_modules/**/*'
+

@@ -8,11 +8,11 @@ export const apiUrl =
 
 export const lambdaServerUrl =
   // "https://ed4a49f1v2.execute-api.ap-southeast-1.amazonaws.com/Prod/api";
-  "http://localhost:3001/api";
+  process.env.REACT_APP_API_LAMBDA;
 export const cognitoServerUrl =
   // "https://kb1z7k3ewc.execute-api.ap-southeast-1.amazonaws.com/Prod";
-  "http://localhost:5001";
-export const s3ServerUrl = "http://localhost:4001";
+  process.env.REACT_APP_API_AUTH;
+export const s3ServerUrl = process.env.REACT_APP_API_S3;
 
 export const LOCAL_STORAGE_TOKEN_NAME = "learnit-mern";
 
