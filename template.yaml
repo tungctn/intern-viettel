@@ -35,12 +35,12 @@ Resources:
 Outputs:
   ExpressApi:
     Description: "API Gateway endpoint URL for Prod stage for Express server"
-    Value: !Sub "https://${ServerStack.Outputs.ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/api"
+    Value: !Sub "${ServerStack.Outputs.ExpressApi}/api"
 
   AuthApi:
     Description: "API Gateway endpoint URL for Prod stage for Auth server"
-    Value: !Sub "https://${CognitoStack.Outputs.AuthApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Value: !Sub "${CognitoStack.Outputs.AuthApi}"
 
   ImageApi:
     Description: "API Gateway endpoint URL for Prod stage for Image server"
-    Value: !Sub "https://${StorageStack.Outputs.ImageApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Value: !Sub "${StorageStack.Outputs.ImageApi}"

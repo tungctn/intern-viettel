@@ -104,4 +104,4 @@ Outputs:
     Value: !Ref ExpressUserPoolClient
 
   AuthApi: 
-    Value: !Ref CognitoApi
+    Value: !Sub https://${CognitoApi}.execute-api.${AWS::Region}.amazonaws.com/Prod
