@@ -5,9 +5,6 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - cd my-app
-      - npm install
-      - cd ..
       - cd aws-lambda-server
       - npm install
       - cd ..
@@ -15,6 +12,12 @@ phases:
       - npm install
       - cd ..
       - cd aws-eventBridge
+      - npm install
+      - cd ..
+      - cd aws-s3
+      - npm install
+      - cd ..
+      - cd aws-sns
       - npm install
       - cd ..
 
