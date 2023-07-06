@@ -81,6 +81,7 @@ Resources:
                 Action:
                   - dynamodb:*
                 Resource: "*"
+        
 
 Outputs:
   ExpressFunction:
