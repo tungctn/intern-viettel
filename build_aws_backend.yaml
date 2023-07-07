@@ -25,3 +25,8 @@ phases:
     commands:
       - sam build -t template.yaml
       - sam deploy --stack-name intern-viettel --s3-bucket intern-viettel-storage-bucket --s3-prefix intern-viettel --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM --no-confirm-changeset
+      # - sam build -t template.yaml
+      # - sam deploy --stack-name intern-viettel --s3-bucket intern-viettel-storage-bucket --s3-prefix intern-viettel --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM --no-confirm-changeset
+      # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ExpressApi`].OutputValue' --output text > my-app/.env
+      # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`AuthApi`].OutputValue' --output text >> my-app/.env
+      # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ImageApi`].OutputValue' --output text >> my-app/.env
