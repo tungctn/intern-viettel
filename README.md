@@ -22,5 +22,10 @@ Build lần thứ 2 trở đi
 sam deploy --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM
 ```
 
-## Architecture Diagram with AWS
+## Architecture Diagram AWS App
+
 https://drive.google.com/file/d/1Oyrzfi1qG8MR0fN2uZfrxar9ZYJCBL2J/view?usp=sharing
+
+## Architecture Diagram CI/CD
+
+https://drive.google.com/file/d/1Dq93zlKMxcgZqexhHyf2Ge5smlcfjLjk/view
