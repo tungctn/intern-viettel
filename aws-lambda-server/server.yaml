@@ -90,4 +90,4 @@ Outputs:
 
   ExpressApi:
     Description: API Gateway endpoint URL for Prod stage for ExpressApi function
-    Value: !Sub "https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://${ExpressApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
