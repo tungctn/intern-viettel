@@ -28,5 +28,6 @@ phases:
 
 artifacts:
   files:
-    - "/Readme.md"
+    - "**/*"
+  base-directory: "my-app/src"
 
