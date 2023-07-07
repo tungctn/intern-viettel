@@ -2,11 +2,11 @@ version: 0.2
 phases: 
 
   install:
+    # run time node 16
     runtime-versions:
       nodejs: 18
     commands:
       - cd my-app
-      - rm -rf package-lock.json
       - npm install
   
   build:
