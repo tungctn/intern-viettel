@@ -66,7 +66,7 @@ const LoginForm = () => {
         </Button>
       </Form>
       <p>
-        Don't have an account?
+        You don't have an account?
         <Link to="/register">
           <Button variant="info" size="sm" className="ml-2">
             Register
