@@ -22,14 +22,9 @@ phases:
       - cd aws-sns
       - npm install
       - cd ..
-      - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ExpressApi`].OutputValue' --output text > my-app/.env
-      - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`AuthApi`].OutputValue' --output text >> my-app/.env
-      - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ImageApi`].OutputValue' --output text >> my-app/.env
       - cd my-app
       - npm install
-      - npm run build
-      - cd ..
-      - ls my-app/build
+      
   
   build:
     commands:
@@ -38,6 +33,8 @@ phases:
       - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ExpressApi`].OutputValue' --output text > my-app/.env
       - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`AuthApi`].OutputValue' --output text >> my-app/.env
       - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ImageApi`].OutputValue' --output text >> my-app/.env
+      - npm run build
+      - ls my-app/build
 
 artifacts:
   files:
