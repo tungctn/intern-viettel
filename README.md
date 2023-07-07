@@ -24,7 +24,7 @@ sam deploy --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED
 
 ## Architecture Diagram AWS App
 
-https://drive.google.com/file/d/1Oyrzfi1qG8MR0fN2uZfrxar9ZYJCBL2J/view?usp=sharing
+https://drive.google.com/file/d/1WWib6d4iAuCq0QQtITbXoIYi-Ts0YkbO/view?usp=sharing
 
 ## Architecture Diagram CI/CD
 
