@@ -25,9 +25,3 @@ phases:
     commands:
       - sam build -t template.yaml
       - sam deploy --stack-name intern-viettel --s3-bucket intern-viettel-storage-bucket --s3-prefix intern-viettel --region ap-southeast-1 --capabilities CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM --no-confirm-changeset
-
-artifacts:
-  files:
-    - "**/*"
-  base-directory: "my-app/src"
-
