@@ -7,7 +7,7 @@ phases:
     commands:
       - cd my-app
       - npm install
-      - cd ..
+      # - cd ..
   
   build:
     commands:
