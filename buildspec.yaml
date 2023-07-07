@@ -24,7 +24,7 @@ phases:
       - cd ..
       - cd my-app
       - npm install
-      
+      - cd ..
   
   build:
     commands:
