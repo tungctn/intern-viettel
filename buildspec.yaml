@@ -22,6 +22,7 @@ phases:
       # - cd aws-sns
       # - npm install
       # - cd ..
+      
       - cd my-app
       - echo Installing source NPM dependencies...
       - npm install
