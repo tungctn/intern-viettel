@@ -3,11 +3,10 @@ phases:
 
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: 16
     commands:
       - cd my-app
       - npm install
-      # - cd ..
   
   build:
     commands:
