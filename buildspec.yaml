@@ -35,7 +35,7 @@ phases:
       - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ImageApi`].OutputValue' --output text >> my-app/.env
       - cd my-app
       - npm run build
-      - ls my-app/build
+      - ls ./build
 
 artifacts:
   files:
