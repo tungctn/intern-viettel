@@ -37,7 +37,7 @@ phases:
       - npm install
       - npm run build
       - cd ..
-      - aws s3 sync my-app/build s3://intern-viettel-storage-bucket/intern-viettel --delete
+      # - aws s3 sync my-app/build s3://intern-viettel-storage-bucket/intern-viettel --delete
 
 artifacts:
   files:
