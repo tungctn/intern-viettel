@@ -40,6 +40,8 @@ phases:
 artifacts:
   files:
     - '**/*'
-  base-directory: 'my-app'
+  base-directory: 
+    - 'my-app/build'
+    - 'my-app/.env'
 
 
