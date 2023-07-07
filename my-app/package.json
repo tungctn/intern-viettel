@@ -12,13 +12,10 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
     "bootstrap": "^4.6.2",
-    "firebase": "^9.23.0",
     "postcss": "^8.4.25",
     "postcss-safe-parser": "^6.0.0",
     "react-bootstrap": "^1.6.7",
-    "react-router-dom": "^5.2.0",
-    "serverless": "^3.33.0",
-    "yarn": "^1.22.19"
+    "react-router-dom": "^5.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

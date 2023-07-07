@@ -43,10 +43,6 @@ const Profile = () => {
         .catch((error) => {
           console.log(error);
         });
-      navigator.serviceWorker.addEventListener("message", (message) => {
-        console.log(message);
-        setLoading(false);
-      });
     }
   };
 

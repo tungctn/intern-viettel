@@ -1,5 +1,4 @@
 import "./App.css";
-import "./message_init_firebase.js";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "./components/layout/Landing";
 import Auth from "./views/Auth";
