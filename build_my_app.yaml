@@ -5,8 +5,11 @@ phases:
     # run time node 16
     runtime-versions:
       nodejs: 18
+
+  pre_build:
     commands:
       - cd my-app
+      - echo Installing source NPM dependencies...
       - npm install
   
   build:
@@ -17,8 +20,4 @@ artifacts:
   files:
     - '**/*'
   base-directory: 'my-app/build'
-
-cache:
-  paths:
-    - 'my-app/node_modules/**/*'
 
