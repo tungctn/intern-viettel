@@ -23,8 +23,8 @@ phases:
       # - npm install
       # - cd ..
       - cd my-app
+      - echo Installing source NPM dependencies...
       - npm install
-      - cd ..
   
   build:
     commands:
@@ -33,9 +33,8 @@ phases:
       # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ExpressApi`].OutputValue' --output text > my-app/.env
       # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`AuthApi`].OutputValue' --output text >> my-app/.env
       # - aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ImageApi`].OutputValue' --output text >> my-app/.env
-      - cd my-app
+      - echo Build started on 'date'
       - npm run build
-      - ls ./build
 
 artifacts:
   files:
