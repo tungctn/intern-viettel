@@ -33,7 +33,9 @@ const Dashboard = () => {
   } = useContext(PostContext);
 
   // Start: Get all posts
-  useEffect(() => getOwnPosts(), []);
+  useEffect(() => {
+    getOwnPosts();
+  }, []);
 
   let body = null;
   const [searchTerm, setSearchTerm] = useState("");

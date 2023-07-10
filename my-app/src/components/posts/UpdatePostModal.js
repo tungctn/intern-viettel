@@ -17,7 +17,9 @@ const UpdatePostModal = () => {
   // State
   const [updatedPost, setUpdatedPost] = useState(post);
 
-  useEffect(() => setUpdatedPost(post), [post]);
+  useEffect(() => {
+    setUpdatedPost(post);
+  }, [post]);
 
   const { title, description, url, status, source } = updatedPost;
 
