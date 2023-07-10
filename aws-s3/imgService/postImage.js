@@ -81,7 +81,7 @@ const uploadImage = async (req, res, next) => {
         return res.status(200).json({
           success: true,
           message: "Image uploaded successfully",
-      });
+        });
       } else {
         console.log("User not updated");
         return res.status(500).json({
@@ -97,14 +97,14 @@ const uploadImage = async (req, res, next) => {
       console.log("Unsafe");
       return res.status(500).json({
         success: false,
-        message: "Internal server error",
+        message: "Internal server error1",
       });
     }
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Internal server error2",
     });
   }
 };
