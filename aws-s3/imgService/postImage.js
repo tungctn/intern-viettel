@@ -97,14 +97,14 @@ const uploadImage = async (req, res, next) => {
       console.log("Unsafe");
       return res.status(500).json({
         success: false,
-        message: "Internal server error1",
+        message: "Image is not safe",
       });
     }
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
       success: false,
-      message: "Internal server error2",
+      message: error.message,
     });
   }
 };

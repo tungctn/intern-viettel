@@ -10,4 +10,8 @@ app.use(express.static("public"));
 
 app.use("/", router);
 
+router.get("/", (req, res) => {
+  res.json({ message: "Welcome to the application." });
+});
+
 module.exports = app;

@@ -14,6 +14,7 @@ import AddPostModal from "../components/posts/AddPostModal";
 import UpdatePostModal from "../components/posts/UpdatePostModal";
 import addIcon from "../assets/plus-circle-fill.svg";
 import FormControl from "react-bootstrap/FormControl";
+import { getMessaging, onMessage } from "firebase/messaging";
 
 const Dashboard = () => {
   // Contexts
@@ -35,6 +36,7 @@ const Dashboard = () => {
   useEffect(() => {
     getOwnPosts();
   }, []);
+  // init firebase messaging
 
   let body = null;
   const [searchTerm, setSearchTerm] = useState("");

@@ -8,9 +8,9 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 import Home from "./views/Home";
 import PostContextProvider from "./contexts/PostContext";
 import Profile from "./components/auth/Profile";
+import "./firebase";
 
 function App() {
-
   return (
     <AuthContextProvider>
       <PostContextProvider>

@@ -106,6 +106,32 @@ Resources:
                 Resource: 
                 - !Ref TopicNotificationImage
                 - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:*
+      - PolicyName: "CloudWatchPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - "logs:CreateLogGroup"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+                Resource: "*"
+      - PolicyName: "RekognitionPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - "rekognition:*"
+                Resource: "*"
+      - PolicyName: "DynamoDBPolicy"
+        PolicyDocument: 
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - "dynamodb:*"
+                Resource: "*"
                 
   ImageFunctionPermission:
     Type: AWS::Lambda::Permission
