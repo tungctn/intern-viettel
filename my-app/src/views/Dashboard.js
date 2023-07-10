@@ -32,7 +32,6 @@ const Dashboard = () => {
     filterPost,
   } = useContext(PostContext);
 
-  // Start: Get all posts
   useEffect(() => {
     getOwnPosts();
   }, []);
