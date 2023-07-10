@@ -34,7 +34,7 @@ Resources:
 
 Outputs:
   ExpressApi:
-    Description: "API Gateway endpoint URL for Prod stage for Express server"
+    Description: "API Gateway endpoint URL for Prod stage for Express server "
     Value: !Sub "${ServerStack.Outputs.ExpressApi}/api"
 
   AuthApi:
