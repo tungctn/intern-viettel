@@ -9,46 +9,8 @@ const uploadImage = async (req, res, next) => {
     const file = req.file;
     const user_id = req.params.id;
     const response = await s3Uploadv3(file, user_id);
-
-    // const params = {
-    //   Message: JSON.stringify({
-    //     user_id: user_id,
-    //     url: response?.Location,
-    //   }),
-    //   TopicArn: process.env.SNS_TOPIC_ARN,
-    //   MessageStructure: "json",
-    // };
-    // sns.publish(
-    //   {
-    //     Message: JSON.stringify({
-    //       default: JSON.stringify({
-    //         user_id: user_id,
-    //         url: response?.Location,
-    //       }),
-    //     }),
-    //     MessageStructure: "json",
-    //     TopicArn: process.env.SNS_TOPIC_ARN,
-    //   },
-    //   (err, data) => {
-    //     if (err) {
-    //       console.log(err);
-    //       return res.status(500).json({
-    //         success: false,
-    //         message: "Internal server error",
-    //       });
-    //     }
-    //     console.log(
-    //       `Message ${params.Message} sent to the topic ${params.TopicArn}`
-    //     );
-    //     console.log("MessageID is " + data.MessageId);
-    //     return res.status(200).json({
-    //       success: true,
-    //       message: "Image uploaded successfully",
-    //       data,
-    //     });
-    //   }
-    // );
     const url = response?.Location;
+    const presignedUrl = response?.presignedUrl;
     const bucket = url.split("/")[2].split(".")[0];
     const name = url.split("/")[3] + "/" + url.split("/")[4];
     const params = {
@@ -81,6 +43,7 @@ const uploadImage = async (req, res, next) => {
         return res.status(200).json({
           success: true,
           message: "Image uploaded successfully",
+          presignedUrl: presignedUrl,
         });
       } else {
         console.log("User not updated");
