@@ -1,11 +1,20 @@
 const dynamoose = require("dynamoose");
+require("dotenv").config();
 const Post = require("./models/Post");
 const { v4: uuidv4 } = require("uuid");
 const ddb = new dynamoose.aws.ddb.DynamoDB({
   region: "ap-southeast-1",
 });
+const AWS = require("aws-sdk");
+const sns = new AWS.SNS({ region: "ap-southeast-1" });
 
 dynamoose.aws.ddb.set(ddb);
+
+// require("dynamoose").aws.ddb.set(
+//   require("dynamoose").aws.ddb.DynamoDB({
+//     region: "ap-southeast-1",
+//   })
+// );
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -35,4 +44,33 @@ exports.handler = async (event, context) => {
       id: shuffledPosts[i].id,
     });
   }
+
+  // SNS publish message to topic
+  const params = {
+    Message: JSON.stringify({
+      default: JSON.stringify({
+        message: "Random post successfully",
+      }),
+    }),
+    MessageStructure: "json",
+    TopicArn: process.env.SNS_TOPIC_ARN,
+  };
+  sns.publish(params, (err, data) => {
+    if (err) {
+      console.log(err);
+      // return res.status(500).json({
+      //   success: false,
+      //   message: "Internal server error",
+      // });
+    }
+    console.log(
+      `Message ${params.Message} sent to the topic ${params.TopicArn}`
+    );
+    console.log("MessageID is " + data.MessageId);
+    // return res.status(200).json({
+    //   success: true,
+    //   message: "Random post successfully",
+    //   data,
+    // });
+  });
 };

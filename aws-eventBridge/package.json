@@ -1,9 +1,11 @@
 {
   "name": "eventBridge",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "dependencies": {
+    "aws-sdk": "^2.1413.0",
+    "dotenv": "^16.3.1",
     "dynamoose": "^3.2.0",
     "uuid": "^9.0.0"
   }

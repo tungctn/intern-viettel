@@ -7,6 +7,12 @@ Globals:
     Timeout: 600
   Api:
     TracingEnabled: true
+
+Parameters:
+  TopicNotificationImage:
+    Type: String
+    Description: SNS Notification Image
+
 Resources:
   # event bridge
   EventBridgeFunction:
@@ -22,6 +28,13 @@ Resources:
             Action:
               - dynamodb:*
             Resource: "*"
+          - Effect: Allow
+            Action:
+              - sns:*
+            Resource: "*"
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Ref TopicNotificationImage
 
   EventBridgeRule:
     Type: AWS::Events::Rule

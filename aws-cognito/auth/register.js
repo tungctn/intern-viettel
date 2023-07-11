@@ -1,5 +1,7 @@
 require("dotenv").config();
 const { cognito } = require("./cognito");
+const User = require("../models/User");
+const { v4: uuidv4 } = require("uuid");
 
 const register = async (req, res, next) => {
   const { email, password, username } = req.body;
@@ -25,6 +27,7 @@ const register = async (req, res, next) => {
     if (err) {
       res.status(400).json(err);
     } else {
+      console.log(data);
       res.status(200).json(data);
     }
   });

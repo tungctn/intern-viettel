@@ -10,7 +10,6 @@ import PostContextProvider from "./contexts/PostContext";
 import Profile from "./components/auth/Profile";
 
 function App() {
-
   return (
     <AuthContextProvider>
       <PostContextProvider>
@@ -26,6 +25,11 @@ function App() {
               exact
               path="/register"
               render={(props) => <Auth {...props} authRoute="register" />}
+            />
+            <Route
+              exact
+              path="/confirm"
+              render={(props) => <Auth {...props} authRoute="confirm" />}
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
             <ProtectedRoute exact path="/home" component={Home} />

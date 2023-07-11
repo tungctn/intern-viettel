@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import { Redirect } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import Confirm from "../components/auth/Confirm";
 
 const Auth = ({ authRoute }) => {
   const {
@@ -24,6 +25,7 @@ const Auth = ({ authRoute }) => {
       <>
         {authRoute === "login" && <LoginForm />}
         {authRoute === "register" && <RegisterForm />}
+        {authRoute === "confirm" && <Confirm />}
       </>
     );
 

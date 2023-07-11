@@ -17,10 +17,10 @@ Parameters:
 
 Resources:
 
-  ModerationFunction: 
+  NotificationFunction: 
     Type: AWS::Serverless::Function
     Properties: 
-      Handler: moderation.handler
+      Handler: notification.handler
       Runtime: nodejs18.x
       Architectures:
         - x86_64
@@ -37,7 +37,7 @@ Resources:
     Properties:
       TopicName: SNS-Notification-Image
       Subscription:
-        - Endpoint: !GetAtt ModerationFunction.Arn
+        - Endpoint: !GetAtt NotificationFunction.Arn
           Protocol: lambda
  
   TopicNotificationImagePolicy:
@@ -56,10 +56,10 @@ Resources:
       Topics:
         - !Ref TopicNotificationImage
  
-  ModerationFunctionPermission:
+  NotificationFunctionPermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt ModerationFunction.Arn
+      FunctionName: !GetAtt NotificationFunction.Arn
       Action: lambda:InvokeFunction
       Principal: sns.amazonaws.com
       SourceArn: !Ref TopicNotificationImage

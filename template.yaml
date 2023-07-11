@@ -12,6 +12,8 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: aws-eventBridge/eventBridge.yaml
+      Parameters:
+        TopicNotificationImage: !GetAtt NotificationStack.Outputs.TopicNotificationImage
 
   CognitoStack: 
     Type: AWS::Serverless::Application

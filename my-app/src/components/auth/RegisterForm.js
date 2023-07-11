@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import AlertMessage from "../layout/AlertMessage";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
   // Context
   const { registerUser } = useContext(AuthContext);
+  const history = useHistory();
 
   // Local state
   const [registerForm, setRegisterForm] = useState({
@@ -29,7 +31,6 @@ const RegisterForm = () => {
 
   const register = async (event) => {
     event.preventDefault();
-
     if (password !== confirmPassword) {
       setAlert({ type: "danger", message: "Passwords do not match" });
       setTimeout(() => setAlert(null), 5000);
@@ -38,25 +39,18 @@ const RegisterForm = () => {
 
     try {
       const registerData = await registerUser(registerForm);
-      if (!registerData.success) {
-        setAlert({ type: "danger", message: registerData.message });
-        setTimeout(() => setAlert(null), 5000);
-      }
+      // if (!registerData.success) {
+      //   setAlert({ type: "danger", message: registerData.message });
+      //   setTimeout(() => setAlert(null), 5000);
+      // } else {
+      history.push("/confirm");
+      localStorage.setItem("email", email);
+      localStorage.setItem("username", username);
+      // }
     } catch (error) {
       console.log(error);
     }
   };
-  // const register = (event) => {
-  //   console.log("register");
-  //   event.preventDefault();
-  //   handleRegister(username, email, password)
-  //     .then((data) => {
-  //       console.log(data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   return (
     <>
