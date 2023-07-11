@@ -29,3 +29,7 @@ https://drive.google.com/file/d/1WWib6d4iAuCq0QQtITbXoIYi-Ts0YkbO/view?usp=shari
 ## Architecture Diagram CI/CD
 
 https://drive.google.com/file/d/1Dq93zlKMxcgZqexhHyf2Ge5smlcfjLjk/view
+
+## Architecture Diagram Component
+
+https://drive.google.com/file/d/1AAhQSQFJWiXVRwITedFVXMYTJ6BYvWHR/view?usp=sharing
