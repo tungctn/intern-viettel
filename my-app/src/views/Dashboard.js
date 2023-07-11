@@ -15,6 +15,7 @@ import UpdatePostModal from "../components/posts/UpdatePostModal";
 import addIcon from "../assets/plus-circle-fill.svg";
 import FormControl from "react-bootstrap/FormControl";
 import { getMessaging, onMessage } from "firebase/messaging";
+import Notification from "../firebaseNotification/Notification";
 
 const Dashboard = () => {
   // Contexts
@@ -105,6 +106,7 @@ const Dashboard = () => {
           console.log("filterPost", event.target.value);
         }}
       />
+      <Notification />
       {body}
       <AddPostModal />
       {post !== null && <UpdatePostModal />}

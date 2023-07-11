@@ -76,13 +76,27 @@ const AuthContextProvider = ({ children }) => {
         `${cognitoServerUrl}/auth/register`,
         userForm
       );
-      if (response.data.success)
-        localStorage.setItem(
-          LOCAL_STORAGE_TOKEN_NAME,
-          response.data.accessToken
-        );
+      // if (response.data.success)
+      //   localStorage.setItem(
+      //     LOCAL_STORAGE_TOKEN_NAME,
+      //     response.data.accessToken
+      //   );
 
-      await loadUser();
+      // await loadUser();
+
+      return response.data;
+    } catch (error) {
+      if (error.response.data) return error.response.data;
+      else return { success: false, message: error.message };
+    }
+  };
+
+  const confirmUser = async (userForm) => {
+    try {
+      const response = await axios.post(
+        `${cognitoServerUrl}/auth/confirm`,
+        userForm
+      );
 
       return response.data;
     } catch (error) {
@@ -120,6 +134,7 @@ const AuthContextProvider = ({ children }) => {
     uploadImage,
     logoutUser,
     authState,
+    confirmUser,
   };
 
   // Return provider

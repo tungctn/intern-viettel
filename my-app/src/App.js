@@ -8,7 +8,6 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 import Home from "./views/Home";
 import PostContextProvider from "./contexts/PostContext";
 import Profile from "./components/auth/Profile";
-import "./firebase";
 
 function App() {
   return (
@@ -26,6 +25,11 @@ function App() {
               exact
               path="/register"
               render={(props) => <Auth {...props} authRoute="register" />}
+            />
+            <Route
+              exact
+              path="/confirm"
+              render={(props) => <Auth {...props} authRoute="confirm" />}
             />
             <ProtectedRoute exact path="/dashboard" component={Dashboard} />
             <ProtectedRoute exact path="/home" component={Home} />
