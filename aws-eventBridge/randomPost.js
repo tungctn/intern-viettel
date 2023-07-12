@@ -10,12 +10,6 @@ const sns = new AWS.SNS({ region: "ap-southeast-1" });
 
 dynamoose.aws.ddb.set(ddb);
 
-// require("dynamoose").aws.ddb.set(
-//   require("dynamoose").aws.ddb.DynamoDB({
-//     region: "ap-southeast-1",
-//   })
-// );
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
