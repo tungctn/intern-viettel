@@ -9,10 +9,6 @@ Globals:
     Timeout: 600
   Api:
     TracingEnabled: true
-Parameters:
-  TopicNotificationImage:
-    Type: String
-    Description: SNS Notification Image
 
 Resources:
   StorageBucket:
@@ -72,7 +68,6 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME: !Ref StorageBucket
-          SNS_TOPIC_ARN: !Ref TopicNotificationImage
 
   FunctionImageRole: 
     Type: AWS::IAM::Role
@@ -104,7 +99,6 @@ Resources:
                 Action:
                 - "sns:Publish"
                 Resource: 
-                - !Ref TopicNotificationImage
                 - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:*
       - PolicyName: "CloudWatchPolicy"
         PolicyDocument: 
@@ -139,7 +133,6 @@ Resources:
       FunctionName: !GetAtt ImageFunction.Arn
       Action: lambda:InvokeFunction
       Principal: sns.amazonaws.com
-      SourceArn: !Ref TopicNotificationImage
 
 Outputs:
   StorageBucket:
