@@ -12,8 +12,6 @@ const confirm = async (req, res, next) => {
     Username: email,
   };
 
-  // get name from cognito
-
   cognito.confirmSignUp(params, async (err, data) => {
     if (err) {
       return res.status(400).json(err);
