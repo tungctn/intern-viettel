@@ -13,6 +13,7 @@ import SinglePost from "../components/posts/SinglePost";
 import AddPostModal from "../components/posts/AddPostModal";
 import UpdatePostModal from "../components/posts/UpdatePostModal";
 import addIcon from "../assets/plus-circle-fill.svg";
+import FormControl from "react-bootstrap/FormControl";
 
 const Home = () => {
   // Contexts
@@ -28,6 +29,7 @@ const Home = () => {
     setShowAddPostModal,
     showToast: { show, message, type },
     setShowToast,
+    searchPost,
   } = useContext(PostContext);
 
   // Start: Get all posts
@@ -89,6 +91,14 @@ const Home = () => {
 
   return (
     <>
+      <FormControl
+        style={{ width: "60%", margin: "auto", marginTop: "30px" }}
+        type="text"
+        placeholder="Search..."
+        onChange={(event) => {
+          searchPost(event.target.value);
+        }}
+      />
       {body}
       <AddPostModal />
       {post !== null && <UpdatePostModal />}

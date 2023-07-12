@@ -138,6 +138,38 @@ const PostController = {
         .json({ success: false, message: "Internal server error" });
     }
   },
+  searchPost: async (req, res) => {
+    const { searchQuery } = req.params;
+    try {
+      const posts = await Post.scan().exec();
+      const filteredPosts = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      return res.json({ success: true, posts: filteredPosts });
+    } catch (error) {
+      console.log(error);
+      return res.json({ success: false, message: error.message });
+    }
+  },
+  searchOwnPost: async (req, res) => {
+    const { searchQuery } = req.params;
+    try {
+      const posts = await Post.scan("userId").eq(req.userId).exec();
+      const filteredPosts = posts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      return res.json({ success: true, posts: filteredPosts });
+    } catch (error) {
+      console.log(error);
+      return res.json({ success: false, message: error.message });
+    }
+  },
 };
 
 module.exports = PostController;

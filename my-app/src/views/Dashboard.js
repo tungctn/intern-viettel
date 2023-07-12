@@ -28,7 +28,7 @@ const Dashboard = () => {
     setShowAddPostModal,
     showToast: { show, message, type },
     setShowToast,
-    filterPost,
+    searchOwnPost,
   } = useContext(PostContext);
 
   useEffect(() => {
@@ -96,11 +96,7 @@ const Dashboard = () => {
         type="text"
         placeholder="Search..."
         onChange={(event) => {
-          if (event.target.value === "") {
-            getOwnPosts();
-          }
-          filterPost(event.target.value);
-          console.log("filterPost", event.target.value);
+          searchOwnPost(event.target.value);
         }}
       />
       {body}

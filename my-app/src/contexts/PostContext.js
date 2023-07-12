@@ -105,9 +105,30 @@ const PostContextProvider = ({ children }) => {
     }
   };
 
-  // filter post
-  const filterPost = (searchTerm) => {
-    dispatch({ type: FILTER_POST, payload: searchTerm });
+  const searchPost = async (searchValue) => {
+    if (searchValue.trim() !== "") {
+      const response = await axios.get(
+        `${lambdaServerUrl}/posts/search/${searchValue.trim()}`
+      );
+      if (response.data.success) {
+        dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
+      } else {
+        dispatch({ type: POSTS_LOADED_FAIL });
+      }
+    }
+  };
+
+  const searchOwnPost = async (searchValue) => {
+    if (searchValue.trim() !== "") {
+      const response = await axios.get(
+        `${lambdaServerUrl}/posts/own/search/${searchValue.trim()}`
+      );
+      if (response.data.success) {
+        dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
+      } else {
+        dispatch({ type: POSTS_LOADED_FAIL });
+      }
+    }
   };
 
   // Post context data
@@ -125,7 +146,8 @@ const PostContextProvider = ({ children }) => {
     deletePost,
     findPost,
     updatePost,
-    filterPost,
+    searchPost,
+    searchOwnPost,
   };
 
   return (
