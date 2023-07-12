@@ -9,9 +9,9 @@ Globals:
     TracingEnabled: true
 
 Parameters:
-  TopicNotificationImage:
+  TopicNotificationEvent:
     Type: String
-    Description: SNS Notification Image
+    Description: SNS Notification Event
 
 Resources:
   # event bridge
@@ -34,7 +34,7 @@ Resources:
             Resource: "*"
       Environment:
         Variables:
-          SNS_TOPIC_ARN: !Ref TopicNotificationImage
+          SNS_TOPIC_ARN: !Ref TopicNotificationEvent
 
   EventBridgeRule:
     Type: AWS::Events::Rule
@@ -52,6 +52,7 @@ Resources:
       FunctionName: !GetAtt EventBridgeFunction.Arn
       Principal: events.amazonaws.com
       SourceArn: !GetAtt EventBridgeRule.Arn
+
 Outputs:
   EventBridgeFunction:
     Description: "EventBridgeFunction"

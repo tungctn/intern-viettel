@@ -41,30 +41,17 @@ exports.handler = async (event, context) => {
 
   // SNS publish message to topic
   const params = {
-    Message: JSON.stringify({
-      default: JSON.stringify({
-        message: "Random post successfully",
-      }),
-    }),
-    MessageStructure: "json",
+    Message: "List post has been updated",
+    MessageStructure: "string",
     TopicArn: process.env.SNS_TOPIC_ARN,
   };
   sns.publish(params, (err, data) => {
     if (err) {
       console.log(err);
-      // return res.status(500).json({
-      //   success: false,
-      //   message: "Internal server error",
-      // });
     }
     console.log(
       `Message ${params.Message} sent to the topic ${params.TopicArn}`
     );
     console.log("MessageID is " + data.MessageId);
-    // return res.status(200).json({
-    //   success: true,
-    //   message: "Random post successfully",
-    //   data,
-    // });
   });
 };

@@ -13,7 +13,7 @@ Resources:
     Properties:
       Location: aws-eventBridge/eventBridge.yaml
       Parameters:
-        TopicNotificationImage: !GetAtt NotificationStack.Outputs.TopicNotificationImage
+        TopicNotificationEvent: !GetAtt NotificationStack.Outputs.TopicNotificationEvent
 
   CognitoStack: 
     Type: AWS::Serverless::Application
@@ -24,15 +24,13 @@ Resources:
     Type: AWS::Serverless::Application
     Properties:
       Location: aws-s3/Storage.yaml
-      Parameters:
-        TopicNotificationImage: !GetAtt NotificationStack.Outputs.TopicNotificationImage
+      # Parameters:
+      #   TopicNotificationImage: !GetAtt NotificationStack.Outputs.TopicNotificationImage
 
   NotificationStack:
     Type: AWS::Serverless::Application
     Properties:
       Location: aws-sns/Notification.yaml
-      Parameters:
-        Api: !GetAtt ServerStack.Outputs.ExpressApi
 
 Outputs:
   ExpressApi:
