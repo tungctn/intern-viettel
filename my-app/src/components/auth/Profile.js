@@ -14,9 +14,15 @@ const Profile = () => {
     uploadImage,
   } = useContext(AuthContext);
 
+  const {
+    postState: { posts },
+    getOwnPosts,
+  } = useContext(PostContext);
+
   const user1 = {
-    name: email,
+    email: email,
     role: "Senior Journalist",
+    name: username,
     avatar: img,
     articles: 41,
     followers: 976,
@@ -45,6 +51,10 @@ const Profile = () => {
         });
     }
   };
+
+  useEffect(() => {
+    getOwnPosts();
+  }, []);
 
   useEffect(() => {
     if (showToast) {
@@ -96,14 +106,14 @@ const Profile = () => {
 
                   <div className="flex-grow-1 ms-3 ml-4">
                     <Card.Title>{user1.name}</Card.Title>
-                    <Card.Text>{user1.role}</Card.Text>
+                    <Card.Text>{user1.email}</Card.Text>
 
                     <div
                       className="d-flex justify-content-start rounded-3 p-2 mb-2"
                       style={{ backgroundColor: "#efefef" }}>
                       <div>
                         <p className="small text-muted mb-1">Articles</p>
-                        <p className="mb-0">{user1.articles}</p>
+                        <p className="mb-0">{posts.length}</p>
                       </div>
                       <div className="px-3">
                         <p className="small text-muted mb-1">Followers</p>

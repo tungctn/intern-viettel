@@ -9,9 +9,21 @@ const PostController = require("../controllers/post.controller");
 // getAllPosts
 router.get("/", PostController.getPosts);
 
+// @route POST api/posts/search
+// searchPosts
+router.get("/search/:searchQuery", PostController.searchPost);
+
 // @route GET api/posts/own
 // getOwnPosts
 router.get("/own", verifyToken, PostController.getOwnPosts);
+
+// @route POST api/posts/own/search
+// searchOwnPosts
+router.get(
+  "/own/search/:searchQuery",
+  verifyToken,
+  PostController.searchOwnPost
+);
 
 // @route POST api/posts
 // createPost
