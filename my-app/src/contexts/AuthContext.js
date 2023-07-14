@@ -9,6 +9,7 @@ import {
 } from "./constants";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
+import cognito from "../utils/cognito";
 
 export const AuthContext = createContext();
 
@@ -48,21 +49,52 @@ const AuthContextProvider = ({ children }) => {
   }, []);
 
   // Login
+  // const loginUser = async (userForm) => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${cognitoServerUrl}/auth/login`,
+  //       userForm
+  //     );
+  //     if (response.data.success)
+  //       localStorage.setItem(
+  //         LOCAL_STORAGE_TOKEN_NAME,
+  //         response.data.accessToken
+  //       );
+
+  //     await loadUser();
+
+  //     return response.data;
+  //   } catch (error) {
+  //     if (error.response.data) return error.response.data;
+  //     else return { success: false, message: error.message };
+  //   }
+  // };
   const loginUser = async (userForm) => {
     try {
-      const response = await axios.post(
-        `${cognitoServerUrl}/auth/login`,
-        userForm
-      );
-      if (response.data.success)
+      const params = {
+        AuthFlow: "USER_PASSWORD_AUTH",
+        ClientId: process.env.REACT_APP_CLIENT_ID,
+        AuthParameters: {
+          USERNAME: userForm.username,
+          PASSWORD: userForm.password,
+        },
+      };
+
+      cognito.initiateAuth(params, async (err, result) => {
+        if (err) {
+          console.log(err);
+        }
         localStorage.setItem(
           LOCAL_STORAGE_TOKEN_NAME,
-          response.data.accessToken
+          result.AuthenticationResult.AccessToken
         );
+        await loadUser();
+      });
 
-      await loadUser();
-
-      return response.data;
+      return {
+        success: true,
+        message: "User logged in successfully",
+      };
     } catch (error) {
       if (error.response.data) return error.response.data;
       else return { success: false, message: error.message };
@@ -76,14 +108,6 @@ const AuthContextProvider = ({ children }) => {
         `${cognitoServerUrl}/auth/register`,
         userForm
       );
-      // if (response.data.success)
-      //   localStorage.setItem(
-      //     LOCAL_STORAGE_TOKEN_NAME,
-      //     response.data.accessToken
-      //   );
-
-      // await loadUser();
-
       return response.data;
     } catch (error) {
       if (error.response.data) return error.response.data;
