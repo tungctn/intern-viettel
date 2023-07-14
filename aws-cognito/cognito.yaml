@@ -105,3 +105,4 @@ Outputs:
 
   AuthApi: 
     Value: !Sub https://${CognitoApi}.execute-api.${AWS::Region}.amazonaws.com/Prod
+    
