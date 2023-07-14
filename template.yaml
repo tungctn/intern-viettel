@@ -44,3 +44,7 @@ Outputs:
   ImageApi:
     Description: "API Gateway endpoint URL for Prod stage for Image server"
     Value: !Sub "${StorageStack.Outputs.ImageApi}"
+
+  ClientId: 
+    Description: "Client id for Cognito"
+    Value: !Sub "${CognitoStack.Outputs.ClientId}"
