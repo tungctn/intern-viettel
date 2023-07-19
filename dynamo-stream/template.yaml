@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Dynamo stream to Lambda
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+  DynamoStream:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: DynamoStream
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+  FunctionDynamoStream:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:DescribeStream
+                - dynamodb:GetRecords
+                - dynamodb:GetShardIterator
+                - dynamodb:ListStreams
+              Resource: "*"
+      Events:
+        DynamoStream:
+          Type: DynamoDB
+          Properties:
+            Stream: !GetAtt DynamoStream.StreamArn
+            StartingPosition: LATEST
+            BatchSize: 1
+
+Outputs:
+  DynamoStream:
+    Description: "DynamoStream"
+    Value: !Ref DynamoStream
+    Export:
+      Name: DynamoStream
+  FunctionDynamoStream:
+    Description: "FunctionDynamoStream"
+    Value: !GetAtt FunctionDynamoStream.Arn
+    Export:
+      Name: FunctionDynamoStream
+

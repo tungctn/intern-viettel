@@ -19,42 +19,33 @@ function shuffle(array) {
 }
 
 exports.handler = async (event, context) => {
-  // sort item in Post table by random
-
-  // SNS publish message to topic
   const params = {
     Message: "List post has been updated",
     MessageStructure: "string",
     TopicArn: process.env.SNS_TOPIC_ARN,
   };
-  sns.publish(params, async (err, data) => {
-    if (err) {
-      console.log(err);
-    }
-    console.log(data);
-    console.log(
-      `Message ${params.Message} sent to the topic ${params.TopicArn}`
-    );
-    console.log("MessageID is " + data.MessageId);
-    const posts = await Post.scan().exec();
-    const shuffledPosts = shuffle(posts);
-    for (let i = 0; i < posts.length; i++) {
-      // delete all items in Post table
-      await Post.delete({ id: posts[i].id });
-    }
-    // create new items in Post table
-    for (let i = 0; i < shuffledPosts.length; i++) {
-      const post = await Post.create({
-        title: shuffledPosts[i].title,
-        description: shuffledPosts[i].description,
-        url: shuffledPosts[i].url,
-        status: shuffledPosts[i].status,
-        source: shuffledPosts[i].source,
-        userId: shuffledPosts[i].userId,
-        id: shuffledPosts[i].id,
-      });
-    }
-
-    console.log("Post table has been updated");
-  });
+  const response = await sns.publish(params).promise();
+  console.log(response);
+  console.log(`Message ${params.Message} sent to the topic ${params.TopicArn}`);
+  console.log("MessageID is " + response.MessageId);
+  const posts = await Post.scan().exec();
+  const shuffledPosts = shuffle(posts);
+  for (let i = 0; i < posts.length; i++) {
+    // delete all items in Post table
+    await Post.delete({ id: posts[i].id });
+  }
+  // create new items in Post table
+  for (let i = 0; i < shuffledPosts.length; i++) {
+    const post = await Post.create({
+      title: shuffledPosts[i].title,
+      description: shuffledPosts[i].description,
+      url: shuffledPosts[i].url,
+      status: shuffledPosts[i].status,
+      source: shuffledPosts[i].source,
+      userId: shuffledPosts[i].userId,
+      id: shuffledPosts[i].id,
+      topic: shuffledPosts[i].topic,
+    });
+  }
+  console.log("Post table has been updated");
 };

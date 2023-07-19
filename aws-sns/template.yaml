@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Web Server with AWS Lambda, API Gateway, DynamoDB.
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+
+  TopicNotificationEvent:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNS-Notification-Event
+      Subscription:
+        - Endpoint: tungrok7@gmail.com
+          Protocol: email
+    
+ 
+  TopicNotificationEventPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: SNS-Notification-Image-Policy
+        Version: "2012-10-17"
+        Statement:
+          - Sid: SNS-Notification-Image-Policy
+            Effect: Allow
+            Principal:
+              Service: rekognition.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref TopicNotificationEvent
+      Topics:
+        - !Ref TopicNotificationEvent
+ 
+Outputs:
+  TopicNotificationEvent:
+    Description: "Topic Notification Event"
+    Value: !Ref TopicNotificationEvent

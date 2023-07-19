@@ -10,6 +10,9 @@ const PostSchema = new Schema(
       index: true,
       default: uuidv4(),
     },
+    topic: {
+      type: String,
+    },
     title: {
       type: String,
     },

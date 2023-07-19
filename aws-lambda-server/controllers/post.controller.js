@@ -71,7 +71,7 @@ const PostController = {
   },
 
   createPost: async (req, res) => {
-    const { title, description, url, status, source } = req.body;
+    const { title, description, url, status, source, topic } = req.body;
 
     // Simple validation
     if (!title)
@@ -87,6 +87,7 @@ const PostController = {
           status: status || "TO LEARN",
           userId: req.userId,
           source: source || "",
+          topic: topic || "",
           id: uuidv4(),
         },
         (err, post) => {
@@ -146,7 +147,8 @@ const PostController = {
         (post) =>
           post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+          post.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.topic.toLowerCase().includes(searchQuery.toLowerCase())
       );
       return res.json({ success: true, posts: filteredPosts });
     } catch (error) {
@@ -162,7 +164,8 @@ const PostController = {
         (post) =>
           post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+          post.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.topic.toLowerCase().includes(searchQuery.toLowerCase())
       );
       return res.json({ success: true, posts: filteredPosts });
     } catch (error) {
