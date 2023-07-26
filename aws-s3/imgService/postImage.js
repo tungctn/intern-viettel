@@ -44,6 +44,7 @@ const uploadImage = async (req, res, next) => {
           success: true,
           message: "Image uploaded successfully",
           presignedUrl: presignedUrl,
+          url,
         });
       } else {
         console.log("User not updated");

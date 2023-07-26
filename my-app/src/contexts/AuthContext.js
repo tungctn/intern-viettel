@@ -6,6 +6,7 @@ import {
   lambdaServerUrl,
   s3ServerUrl,
   LOCAL_STORAGE_TOKEN_NAME,
+  SET_AUTH,
 } from "./constants";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
@@ -29,8 +30,9 @@ const AuthContextProvider = ({ children }) => {
     try {
       const response = await axios.get(`${lambdaServerUrl}/auth`);
       if (response.data.success) {
+        console.log(response.data);
         dispatch({
-          type: "SET_AUTH",
+          type: SET_AUTH,
           payload: { isAuthenticated: true, user: response.data.user },
         });
       }
@@ -38,7 +40,7 @@ const AuthContextProvider = ({ children }) => {
       localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
       setAuthToken(null);
       dispatch({
-        type: "SET_AUTH",
+        type: SET_AUTH,
         payload: { isAuthenticated: false, user: null },
       });
     }
@@ -139,6 +141,7 @@ const AuthContextProvider = ({ children }) => {
     logoutUser,
     authState,
     confirmUser,
+    loadUser,
   };
 
   // Return provider

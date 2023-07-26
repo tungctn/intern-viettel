@@ -1,42 +1,150 @@
-// translate to dynamoose
-const dynamoose = require("dynamoose");
-const { Counter, getNextId } = require("./Counter");
-const Schema = dynamoose.Schema;
-const { v4: uuidv4 } = require("uuid");
+const { dynamodb } = require("../utils/db.config");
+const { convertObject } = require("../utils/object.convert");
 
-const PostSchema = new Schema(
-  {
-    id: {
-      type: String,
-      index: true,
-      default: uuidv4(),
-    },
-    title: {
-      type: String,
-    },
-    topic: {
-      type: String,
-    },
-    description: {
-      type: String,
-    },
-    source: {
-      type: String,
-    },
-    url: {
-      type: String,
-    },
-    status: {
-      type: String,
-      enum: ["TO LEARN", "LEARNING", "LEARNED"],
-    },
-    userId: {
-      type: String,
-    },
-  },
-  {
-    timestamps: true,
+class Post {
+  constructor(post) {
+    this.post = post;
   }
-);
 
-module.exports = dynamoose.model("posts", PostSchema);
+  async getPosts() {
+    const params = {
+      TableName: "posts",
+    };
+
+    const response = await dynamodb.scan(params).promise();
+    let posts = [];
+    for (const item of response.Items) {
+      const element = {};
+      for (const key in item) {
+        element[key] = item[key][Object.keys(item[key])[0]];
+        const userId = item["userId"][Object.keys(item["userId"])[0]];
+        const user = await dynamodb
+          .scan({
+            TableName: "users",
+            FilterExpression: "id = :userId",
+            ExpressionAttributeValues: {
+              ":userId": {
+                S: userId,
+              },
+            },
+          })
+          .promise();
+        element["user"] = convertObject(user.Items[0]);
+      }
+      posts.push(element);
+    }
+    return posts;
+  }
+
+  async getOwnPosts(userId) {
+    const params = {
+      TableName: "posts",
+      FilterExpression: "userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": {
+          S: userId,
+        },
+      },
+    };
+
+    const response = await dynamodb.scan(params).promise();
+    let posts = [];
+    for (const item of response.Items) {
+      const element = {};
+      for (const key in item) {
+        element[key] = item[key][Object.keys(item[key])[0]];
+        const userId = item["userId"][Object.keys(item["userId"])[0]];
+        const user = await dynamodb
+          .scan({
+            TableName: "users",
+            FilterExpression: "id = :userId",
+            ExpressionAttributeValues: {
+              ":userId": {
+                S: userId,
+              },
+            },
+          })
+          .promise();
+        element["user"] = convertObject(user.Items[0]);
+      }
+      posts.push(element);
+    }
+    return posts;
+  }
+
+  createPost() {
+    const params = {
+      TableName: "posts",
+      Item: {
+        id: { S: this.post.id },
+        content: { S: this.post.content },
+        url: { S: this.post.url },
+        userId: { S: this.post.userId },
+        createdAt: { S: new Date().toISOString() },
+        updatedAt: { S: new Date().toISOString() },
+      },
+    };
+    return dynamodb
+      .putItem(params, function (err, data) {
+        if (err) {
+          console.log(err);
+        }
+        console.log(data);
+      })
+      .promise();
+  }
+
+  updatePost(id, post) {
+    const params = {
+      TableName: "posts",
+      Key: {
+        id: id,
+      },
+      UpdateExpression:
+        "set content = :content, createdAt = :createdAt, url = :url, userId = :userId, likes = :likes",
+      ExpressionAttributeValues: {
+        ":content": post.content,
+        ":updatedAt": new Date().toISOString(),
+        ":url": post.url,
+        ":userId": post.userId,
+        ":likes": post.likes,
+      },
+    };
+
+    return dynamodb.updateItem(params).promise();
+  }
+
+  deletePost(id) {
+    const params = {
+      TableName: "posts",
+      Key: {
+        id: id,
+      },
+    };
+
+    return dynamodb.deleteItem(params).promise();
+  }
+
+  likePost(id, userId) {
+    const params = {
+      TableName: "posts",
+      Key: {
+        id: id,
+      },
+      UpdateExpression: "set likes = list_append(likes, :newLike)",
+      ExpressionAttributeValues: {
+        ":newLike": {
+          L: [
+            {
+              S: userId,
+            },
+          ],
+        },
+      },
+    };
+
+    return dynamodb.updateItem(params).promise();
+  }
+}
+
+module.exports = Post;

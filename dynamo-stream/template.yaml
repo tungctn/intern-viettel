@@ -11,21 +11,6 @@ Globals:
     TracingEnabled: true
 
 Resources:
-  DynamoStream:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: DynamoStream
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-      StreamSpecification:
-        StreamViewType: NEW_AND_OLD_IMAGES
 
   FunctionDynamoStream:
     Type: AWS::Serverless::Function
@@ -48,16 +33,11 @@ Resources:
         DynamoStream:
           Type: DynamoDB
           Properties:
-            Stream: !GetAtt DynamoStream.StreamArn
+            Stream: "arn:aws:dynamodb:ap-southeast-1:885537931206:table/posts/stream/2023-07-19T07:38:27.320"
             StartingPosition: LATEST
             BatchSize: 1
 
 Outputs:
-  DynamoStream:
-    Description: "DynamoStream"
-    Value: !Ref DynamoStream
-    Export:
-      Name: DynamoStream
   FunctionDynamoStream:
     Description: "FunctionDynamoStream"
     Value: !GetAtt FunctionDynamoStream.Arn

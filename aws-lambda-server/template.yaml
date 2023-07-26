@@ -17,28 +17,6 @@ Resources:
     Properties:
       StageName: Prod
       BinaryMediaTypes: ["*/*"]
-      # Auth:
-      #   DefaultAuthorizer: GeneralAuth
-      #   Authorizers:
-      #     GeneralAuth:
-      #       UserPoolArn: !Ref ExpressUserPool
-      #       Identity:
-      #         Header: Authorization
-      #         ValidationExpression: Bearer.*
-      #     CustomLambdaAuthorizer:
-      #       FunctionArn: !GetAtt ExpressFunction.Arn
-      #       Identity:
-      #         Header: Authorization
-      #         ValidationExpression: Bearer .*
-
-  # lambda authorizer
-  # AuthFunctionPermission:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     FunctionName: !GetAtt ExpressFunction.Arn
-  #     Action: lambda:InvokeFunction
-  #     Principal: cognito-idp.amazonaws.com
-  #     SourceArn: !Sub arn:aws:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${ExpressUserPool}
 
   ExpressFunction:
     Type: AWS::Serverless::Function

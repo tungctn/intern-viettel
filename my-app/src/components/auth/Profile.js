@@ -9,7 +9,8 @@ import { PostContext } from "../../contexts/PostContext";
 const Profile = () => {
   const {
     authState: {
-      user: { username, email, img },
+      user: { email, img },
+      user,
     },
     uploadImage,
   } = useContext(AuthContext);
@@ -22,7 +23,6 @@ const Profile = () => {
   const user1 = {
     email: email,
     role: "Senior Journalist",
-    name: username,
     avatar: img,
     articles: 41,
     followers: 976,
@@ -44,6 +44,9 @@ const Profile = () => {
           if (response.success) {
             setLoading(false);
             setShowToast(true);
+          } else {
+            setLoading(false);
+            setShowToast(false);
           }
         })
         .catch((error) => {
@@ -89,7 +92,8 @@ const Profile = () => {
                       <Image
                         style={{
                           width: "180px",
-                          borderRadius: "10px",
+                          height: "180px",
+                          borderRadius: "50%",
                           cursor: "pointer",
                         }}
                         src={image}
@@ -105,8 +109,8 @@ const Profile = () => {
                   </div>
 
                   <div className="flex-grow-1 ms-3 ml-4">
-                    <Card.Title>{user1.name}</Card.Title>
-                    <Card.Text>{user1.email}</Card.Text>
+                    {/* <Card.Title>{user1.name}</Card.Title> */}
+                    <Card.Text>{`${user.firstName} ${user.lastName}`}</Card.Text>
 
                     <div
                       className="d-flex justify-content-start rounded-3 p-2 mb-2"
