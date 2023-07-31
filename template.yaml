@@ -8,32 +8,21 @@ Resources:
     Properties:
       Location: aws-lambda-server/template.yaml
 
-  EventBridgeStack:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: aws-eventBridge/template.yaml
-      Parameters:
-        TopicNotificationEvent: !GetAtt NotificationStack.Outputs.TopicNotificationEvent
-
-  CognitoStack: 
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: aws-cognito/template.yaml
-
-  StorageStack:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: aws-s3/template.yaml
-
   NotificationStack:
     Type: AWS::Serverless::Application
     Properties:
-      Location: aws-sns/template.yaml
-  
-  DynamoDBStack:
+      Location: notification/template.yaml
+
+  AuthStack: 
     Type: AWS::Serverless::Application
     Properties:
-      Location: dynamo-stream/template.yaml
+      Location: auth-service/template.yaml
+
+  ImageStack:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: img-service/template.yaml
+  
 
 Outputs:
   ExpressApi:
@@ -42,12 +31,16 @@ Outputs:
 
   AuthApi:
     Description: "API Gateway endpoint URL for Prod stage for Auth server"
-    Value: !Sub "${CognitoStack.Outputs.AuthApi}"
+    Value: !Sub "${AuthStack.Outputs.AuthApi}"
 
   ImageApi:
     Description: "API Gateway endpoint URL for Prod stage for Image server"
-    Value: !Sub "${StorageStack.Outputs.ImageApi}"
+    Value: !Sub "${ImageStack.Outputs.ImageApi}"
 
   ClientId: 
     Description: "Client id for Cognito"
-    Value: !Sub "${CognitoStack.Outputs.ExpressUserPoolClientId}"
+    Value: !Sub "${AuthStack.Outputs.ExpressUserPoolClientId}"
+  
+  UserPoolId: 
+    Description: "User pool id for Cognito"
+    Value: !Sub "${AuthStack.Outputs.ExpressUserPoolId}"

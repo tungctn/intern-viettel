@@ -10,38 +10,41 @@ import PostContextProvider from "./contexts/PostContext";
 import Profile from "./components/auth/Profile";
 import Chat from "./views/Chat";
 import { ChatContextProvider } from "./contexts/ChatContext";
+import UserContextProvider from "./contexts/UserContext";
 
 function App() {
   return (
     <AuthContextProvider>
-      <PostContextProvider>
-        <ChatContextProvider>
-          <Router>
-            <Switch>
-              <Route exact path="/" component={Landing} />
-              <Route
-                exact
-                path="/login"
-                render={(props) => <Auth {...props} authRoute="login" />}
-              />
-              <Route
-                exact
-                path="/register"
-                render={(props) => <Auth {...props} authRoute="register" />}
-              />
-              <Route
-                exact
-                path="/confirm"
-                render={(props) => <Auth {...props} authRoute="confirm" />}
-              />
-              <ProtectedRoute exact path="/dashboard" component={Dashboard} />
-              <ProtectedRoute exact path="/home" component={Home} />
-              <ProtectedRoute exact path="/profile" component={Profile} />
-              <ProtectedRoute exact path="/chat" component={Chat} />
-            </Switch>
-          </Router>
-        </ChatContextProvider>
-      </PostContextProvider>
+      <UserContextProvider>
+        <PostContextProvider>
+          <ChatContextProvider>
+            <Router>
+              <Switch>
+                <Route exact path="/" component={Landing} />
+                <Route
+                  exact
+                  path="/login"
+                  render={(props) => <Auth {...props} authRoute="login" />}
+                />
+                <Route
+                  exact
+                  path="/register"
+                  render={(props) => <Auth {...props} authRoute="register" />}
+                />
+                <Route
+                  exact
+                  path="/confirm"
+                  render={(props) => <Auth {...props} authRoute="confirm" />}
+                />
+                <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+                <ProtectedRoute exact path="/home" component={Home} />
+                <ProtectedRoute exact path="/profile" component={Profile} />
+                <ProtectedRoute exact path="/chat" component={Chat} />
+              </Switch>
+            </Router>
+          </ChatContextProvider>
+        </PostContextProvider>
+      </UserContextProvider>
     </AuthContextProvider>
   );
 }

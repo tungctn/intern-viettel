@@ -15,9 +15,8 @@ const SinglePost = ({
   post: { id, content, url, user, likes, createdAt },
   page,
 }) => {
-  const timeAgo = new Date(Number(Date.now() - createdAt)).getUTCHours();
-  console.log(new Date(Number(Date.now() - createdAt)).getUTCHours());
-
+  console.log(Date.now());
+  const timeAgo = Math.floor((Date.now() - createdAt) / (1000 * 60 * 60));
   return (
     <Card
       className="shadow"
@@ -43,9 +42,9 @@ const SinglePost = ({
                 {user?.firstName} {user?.lastName}
               </p>
               <Badge pill variant={randomStatus()}>
-                {timeAgo < 24
-                  ? `${timeAgo} hours ago`
-                  : `${Math.floor(timeAgo / 24)} days ago`}
+                {timeAgo >= 1 && timeAgo < 24 && `${timeAgo} hours ago`}
+                {timeAgo > 24 && `${Math.floor(timeAgo / 24)} days ago`}
+                {timeAgo < 1 && "Just now"}
               </Badge>
             </Col>
             <Col className="text-right">

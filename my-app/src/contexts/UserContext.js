@@ -22,10 +22,10 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
-  const UserContextData = { loadUsers, userState };
+  const userContextData = { loadUsers, userState };
 
   return (
-    <UserContext.Provider value={UserContextData}>
+    <UserContext.Provider value={userContextData}>
       {children}
     </UserContext.Provider>
   );

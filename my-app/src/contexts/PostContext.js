@@ -65,6 +65,7 @@ const PostContextProvider = ({ children }) => {
       const response = await axios.post(`${lambdaServerUrl}/posts`, newPost);
       if (response.data.success) {
         dispatch({ type: ADD_POST, payload: response.data.post });
+        getOwnPosts();
         return response.data;
       }
     } catch (error) {
@@ -94,6 +95,7 @@ const PostContextProvider = ({ children }) => {
       );
       if (response.data.success) {
         dispatch({ type: UPDATE_POST, payload: response.data.post });
+        return response.data;
       }
     } catch (error) {
       console.log(error);

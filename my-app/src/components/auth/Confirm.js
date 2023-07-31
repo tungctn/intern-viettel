@@ -9,20 +9,21 @@ import { useHistory } from "react-router-dom";
 
 const Confirm = () => {
   const email = localStorage.getItem("email") || "";
-  const username = localStorage.getItem("username") || "";
+  // const username = localStorage.getItem("username") || "";
+  const firstName = localStorage.getItem("firstName") || "";
+  const lastName = localStorage.getItem("lastName") || "";
   const { confirmUser } = useContext(AuthContext);
   const [alert, setAlert] = useState(null);
   const [confirmCode, setConfirmCode] = useState();
   const history = useHistory();
   const confirm = async (event) => {
     event.preventDefault();
-    // console.log("confirm");
-    // console.log(email);
     try {
       const confirmData = await confirmUser({
         email: email,
         code: confirmCode,
-        username: username,
+        firstName: firstName,
+        lastName: lastName,
       });
       if (!confirmData.success) {
         setAlert({ type: "danger", message: confirmData.message });

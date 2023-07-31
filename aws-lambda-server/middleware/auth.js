@@ -20,14 +20,17 @@ const verifyToken = (req, res, next) => {
       .json({ success: false, message: "Access token not found" });
 
   try {
-
     const params = {
       AccessToken: token,
     };
 
     cognito.getUser(params, async (err, data) => {
+      console.log(params);
       if (err) {
-        res.status(400).json(err);
+        res.status(400).json({
+          err: err,
+          params: params,
+        });
       } else {
         const user = await User.scan("email").eq(data.Username).exec();
         if (user.length === 0) {

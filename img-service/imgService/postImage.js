@@ -29,30 +29,12 @@ const uploadImage = async (req, res, next) => {
     const labels = moderation.ModerationLabels;
     if (labels.length == 0) {
       console.log("safe");
-      const user = await User.update(
-        {
-          id: user_id,
-        },
-        {
-          img: url,
-        }
-      );
-      // check if user is updated
-      if (user) {
-        console.log("User updated");
-        return res.status(200).json({
-          success: true,
-          message: "Image uploaded successfully",
-          presignedUrl: presignedUrl,
-          url,
-        });
-      } else {
-        console.log("User not updated");
-        return res.status(500).json({
-          success: false,
-          message: "Internal server error",
-        });
-      }
+      return res.status(200).json({
+        success: true,
+        message: "Image uploaded successfully",
+        presignedUrl: presignedUrl,
+        url,
+      });
     } else {
       console.log("Labels detected: ");
       labels.forEach((label) =>

@@ -3,17 +3,19 @@ import playIcon from "../../assets/play-btn.svg";
 import editIcon from "../../assets/pencil.svg";
 import deleteIcon from "../../assets/trash.svg";
 import { PostContext } from "../../contexts/PostContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const ActionButtons = ({ id, likes, page }) => {
   const { deletePost, findPost, setShowUpdatePostModal, likePost } =
     useContext(PostContext);
   const { loadUser } = useContext(AuthContext);
-
-  const choosePost = (postId) => {
-    findPost(postId);
-    setShowUpdatePostModal(true);
+  const [like, setLike] = useState(likes?.length || 0);
+  const choosePost = async () => {
+    const response = await likePost(id);
+    if (response.success) {
+      setLike(like + 1);
+    }
   };
 
   return (
@@ -22,7 +24,6 @@ const ActionButtons = ({ id, likes, page }) => {
         className="post-button"
         onClick={() => {
           likePost(id);
-          loadUser();
         }}>
         <img
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkMO5kUM9Ym5PggFKatlS6GFIj-rtDUgIqcQ&usqp=CAU"
@@ -35,7 +36,7 @@ const ActionButtons = ({ id, likes, page }) => {
             color: "#31a87e",
             marginLeft: "5px",
           }}>
-          {likes?.length || 0}
+          {like}
         </span>
       </Button>
       {page === "dashboard" && (

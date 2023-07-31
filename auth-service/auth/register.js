@@ -4,7 +4,7 @@ const User = require("../models/User");
 const { v4: uuidv4 } = require("uuid");
 
 const register = async (req, res, next) => {
-  const { email, password, username } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 
   const params = {
     ClientId: process.env.CLIENT_POOL_ID,
@@ -18,7 +18,7 @@ const register = async (req, res, next) => {
       },
       {
         Name: "name",
-        Value: username,
+        Value: `${firstName} ${lastName}`,
       },
     ],
   };

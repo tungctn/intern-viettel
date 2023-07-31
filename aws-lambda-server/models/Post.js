@@ -80,8 +80,8 @@ class Post {
         content: { S: this.post.content },
         url: { S: this.post.url },
         userId: { S: this.post.userId },
-        createdAt: { S: new Date().toISOString() },
-        updatedAt: { S: new Date().toISOString() },
+        createdAt: { N: this.post.createdAt.toString() },
+        updatedAt: { N: this.post.updatedAt.toString() },
       },
     };
     return dynamodb
@@ -104,7 +104,7 @@ class Post {
         "set content = :content, createdAt = :createdAt, url = :url, userId = :userId, likes = :likes",
       ExpressionAttributeValues: {
         ":content": post.content,
-        ":updatedAt": new Date().toISOString(),
+        ":updatedAt": Date.now(),
         ":url": post.url,
         ":userId": post.userId,
         ":likes": post.likes,

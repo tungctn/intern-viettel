@@ -15,7 +15,11 @@ export const cognitoServerUrl =
 export const s3ServerUrl =
   process.env.REACT_APP_API_S3 || "http://localhost:4001";
 
+export const chatServerUrl =
+  process.env.REACT_APP_API_CHAT || "http://localhost:6001";
+
 export const LOCAL_STORAGE_TOKEN_NAME = "learnit-mern";
+export const REFRESH_TOKEN_NAME = "learnit-mern-refresh-token";
 
 export const SET_AUTH = "SET_AUTH";
 export const POSTS_LOADED_SUCCESS = "POSTS_LOADED_SUCCESS";

@@ -8,12 +8,28 @@ Globals:
   Api:
     TracingEnabled: true
 
-Parameters:
-  TopicNotificationEvent:
-    Type: String
-    Description: SNS Notification Event
-
 Resources:
+
+  TopicNotificationEvent:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: SNS-Notification-Event
+      Subscription:
+        - Endpoint: tungrok7@gmail.com
+          Protocol: email
+
+  TopicNotificationEventPolicy: 
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: sns:Publish
+            Resource: !Ref TopicNotificationEvent
+      Topics:
+        - !Ref TopicNotificationEvent
   # event bridge
   EventBridgeFunction:
     Type: AWS::Serverless::Function

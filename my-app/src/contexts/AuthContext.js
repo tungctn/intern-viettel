@@ -7,6 +7,7 @@ import {
   s3ServerUrl,
   LOCAL_STORAGE_TOKEN_NAME,
   SET_AUTH,
+  REFRESH_TOKEN_NAME,
 } from "./constants";
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
@@ -21,8 +22,36 @@ const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
+  const refreshToken = async () => {
+    const params = {
+      AuthFlow: "REFRESH_TOKEN_AUTH",
+      ClientId: process.env.REACT_APP_CLIENT_ID, // replace with your client id
+      UserPoolId: process.env.REACT_APP_USERPOOL_ID, // replace with your user pool id
+      AuthParameters: {
+        REFRESH_TOKEN: localStorage[REFRESH_TOKEN_NAME], // replace with the refresh token value
+      },
+    };
+    cognito.initiateAuth(params, function (err, authResult) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(
+          "New Access Token:",
+          authResult.AuthenticationResult.AccessToken
+        );
+        localStorage.setItem(
+          LOCAL_STORAGE_TOKEN_NAME,
+          authResult.AuthenticationResult.AccessToken
+        );
+        setAuthToken(authResult.AuthenticationResult.AccessToken);
+        // loadUser();
+      }
+    });
+  };
+
   // Authenticate user
   const loadUser = async () => {
+    console.log("loadUser");
     if (localStorage[LOCAL_STORAGE_TOKEN_NAME]) {
       setAuthToken(localStorage[LOCAL_STORAGE_TOKEN_NAME]);
     }
@@ -37,7 +66,7 @@ const AuthContextProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      localStorage.removeItem(LOCAL_STORAGE_TOKEN_NAME);
+      refreshToken();
       setAuthToken(null);
       dispatch({
         type: SET_AUTH,
@@ -69,6 +98,10 @@ const AuthContextProvider = ({ children }) => {
         localStorage.setItem(
           LOCAL_STORAGE_TOKEN_NAME,
           result.AuthenticationResult.AccessToken
+        );
+        localStorage.setItem(
+          REFRESH_TOKEN_NAME,
+          result.AuthenticationResult.RefreshToken
         );
         await loadUser();
       });
