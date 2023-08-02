@@ -10,16 +10,13 @@ phases:
       - cd aws-lambda-server
       - npm install
       - cd ..
-      - cd aws-cognito
+      - cd auth-service
       - npm install
       - cd ..
-      - cd aws-eventBridge
+      - cd notification
       - npm install
       - cd ..
-      - cd aws-s3
-      - npm install
-      - cd ..
-      - cd aws-sns
+      - cd img-service
       - npm install
       - cd ..
       - cd my-app
