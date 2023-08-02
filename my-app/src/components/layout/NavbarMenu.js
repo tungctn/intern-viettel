@@ -10,7 +10,7 @@ import { useContext } from "react";
 const NavbarMenu = () => {
   const {
     authState: {
-      user: { username },
+      user: { firstName, lastName },
     },
     logoutUser,
   } = useContext(AuthContext);
@@ -52,11 +52,17 @@ const NavbarMenu = () => {
             as={Link}>
             Profile
           </Nav.Link>
+          <Nav.Link
+            className="font-weight-bolder text-white"
+            to="/chat"
+            as={Link}>
+            Chat
+          </Nav.Link>
         </Nav>
 
         <Nav>
           <Nav.Link className="font-weight-bolder text-white" disabled>
-            Welcome {username}
+            {firstName} {lastName}
           </Nav.Link>
           <Button
             variant="secondary"

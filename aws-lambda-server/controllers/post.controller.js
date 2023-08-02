@@ -1,23 +1,29 @@
 const Post = require("../models/Post");
 const { v4: uuidv4 } = require("uuid");
+const { dynamodb } = require("../utils/db.config");
+const { convertObject } = require("../utils/object.convert");
+
+const params = {
+  TableName: "posts",
+};
 
 const PostController = {
   getPosts: async (req, res) => {
     try {
-      const posts = await Post.scan().exec();
-      return res.json({ success: true, posts });
+      const post = new Post();
+      const posts = await post.getPosts();
+      return res.json({ success: true, posts: posts });
     } catch (error) {
       console.log(error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Internal server error" });
+      return res.status(500).json({ success: false, message: error.message });
     }
   },
 
   getOwnPosts: async (req, res) => {
     try {
-      const posts = await Post.scan("userId").eq(req.userId).exec();
-      return res.json({ success: true, posts });
+      const post = new Post();
+      const posts = await post.getOwnPosts(req.userId);
+      return res.json({ success: true, posts: posts });
     } catch (error) {
       console.log(error);
       return res
@@ -29,7 +35,6 @@ const PostController = {
   updatePost: async (req, res) => {
     const { title, description, url, status, source } = req.body;
 
-    // Simple validation
     if (!title)
       return res
         .status(400)
@@ -71,40 +76,37 @@ const PostController = {
   },
 
   createPost: async (req, res) => {
-    const { title, description, url, status, source } = req.body;
-
-    // Simple validation
-    if (!title)
-      return res
-        .status(400)
-        .json({ success: false, message: "Title is required" });
+    const { content, url } = req.body;
     try {
-      const newPost = await Post.create(
-        {
-          title,
-          description,
-          url: url,
-          status: status || "TO LEARN",
-          userId: req.userId,
-          source: source || "",
-          id: uuidv4(),
-        },
-        (err, post) => {
-          if (err) {
-            console.log(err);
-            return res
-              .status(200)
-              .json({ success: false, message: "Internal server error123" });
-          } else {
-            console.log(post);
-            return res.status(200).json({
-              success: true,
-              message: "Happy learning!",
-              post,
-            });
-          }
-        }
-      );
+      const newPost = {
+        id: uuidv4(),
+        content,
+        url,
+        userId: req.userId,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      const post = new Post(newPost);
+      await post.createPost();
+      return res.status(200).json({
+        success: true,
+        message: "Add post successful",
+        post: newPost,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ success: false, message: error });
+    }
+  },
+
+  deletePost: async (req, res) => {
+    try {
+      const post = new Post();
+      await post.deletePost(req.params.id);
+      return res.json({
+        success: true,
+        message: "Post deleted successfully",
+      });
     } catch (error) {
       console.log(error);
       return res
@@ -113,24 +115,90 @@ const PostController = {
     }
   },
 
-  deletePost: async (req, res) => {
+  likePost: async (req, res) => {
     try {
-      const deletedPost = await Post.delete(
-        { id: req.params.id },
-        (err, data) => {
+      let post = await dynamodb
+        .scan({
+          ...params,
+          FilterExpression: "id = :id",
+          ExpressionAttributeValues: {
+            ":id": {
+              S: req.params.id,
+            },
+          },
+        })
+        .promise();
+      post = convertObject(post.Items[0]);
+      let arr = [];
+      post.likes.map((like) => {
+        arr.push(like[Object.keys(like)[0]]);
+      });
+      if (arr.includes(req.userId)) {
+        return res.json({
+          success: false,
+          message: "You have already liked this post",
+        });
+      }
+      dynamodb.updateItem(
+        {
+          ...params,
+          Key: {
+            id: {
+              S: req.params.id,
+            },
+          },
+          UpdateExpression: "set likes = list_append(likes, :newLike)",
+          ExpressionAttributeValues: {
+            ":newLike": {
+              L: [
+                {
+                  S: req.userId,
+                },
+              ],
+            },
+          },
+        },
+        function (err, data) {
           if (err) {
             console.log(err);
-            return res
-              .status(500)
-              .json({ success: false, message: "Internal server error11" });
-          } else {
-            return res.json({
-              success: true,
-              message: "Post deleted successfully",
-            });
+            return res.status(500).json({ success: false, message: err });
           }
+          console.log(data);
         }
       );
+
+      let updatePost = await dynamodb
+        .scan({
+          ...params,
+          FilterExpression: "id = :id",
+          ExpressionAttributeValues: {
+            ":id": {
+              S: req.params.id,
+            },
+          },
+        })
+        .promise();
+      updatePost = convertObject(updatePost.Items[0]);
+      const user = await dynamodb
+        .scan({
+          TableName: "users",
+          FilterExpression: "id = :userId",
+          ExpressionAttributeValues: {
+            ":userId": {
+              S: req.userId,
+            },
+          },
+        })
+        .promise();
+      console.log(updatePost);
+      return res.json({
+        success: true,
+        message: "Post updated successfully",
+        post: {
+          ...updatePost,
+          user: convertObject(user.Items[0]),
+        },
+      });
     } catch (error) {
       console.log(error);
       res
@@ -138,6 +206,7 @@ const PostController = {
         .json({ success: false, message: "Internal server error" });
     }
   },
+
   searchPost: async (req, res) => {
     const { searchQuery } = req.params;
     try {
@@ -146,7 +215,8 @@ const PostController = {
         (post) =>
           post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+          post.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.topic.toLowerCase().includes(searchQuery.toLowerCase())
       );
       return res.json({ success: true, posts: filteredPosts });
     } catch (error) {
@@ -154,6 +224,7 @@ const PostController = {
       return res.json({ success: false, message: error.message });
     }
   },
+
   searchOwnPost: async (req, res) => {
     const { searchQuery } = req.params;
     try {
@@ -162,7 +233,8 @@ const PostController = {
         (post) =>
           post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           post.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.source.toLowerCase().includes(searchQuery.toLowerCase())
+          post.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.topic.toLowerCase().includes(searchQuery.toLowerCase())
       );
       return res.json({ success: true, posts: filteredPosts });
     } catch (error) {

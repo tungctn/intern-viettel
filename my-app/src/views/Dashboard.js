@@ -17,9 +17,7 @@ import FormControl from "react-bootstrap/FormControl";
 
 const Dashboard = () => {
   const {
-    authState: {
-      user: { username },
-    },
+    authState: {},
   } = useContext(AuthContext);
 
   const {
@@ -34,7 +32,6 @@ const Dashboard = () => {
   useEffect(() => {
     getOwnPosts();
   }, []);
-  // init firebase messaging
 
   let body = null;
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,7 +46,6 @@ const Dashboard = () => {
     body = (
       <>
         <Card className="text-center mx-5 my-5">
-          <Card.Header as="h1">Hi {username}</Card.Header>
           <Card.Body>
             <Card.Title>Welcome to LearnIt</Card.Title>
             <Card.Text>
@@ -67,10 +63,10 @@ const Dashboard = () => {
   } else {
     body = (
       <>
-        <Row className="row-cols-1 row-cols-md-3 g-4 mx-auto mt-3">
+        <Row className="row-cols-1 row-cols-md-1 g-4 mx-auto mt-3">
           {posts?.map((post) => (
-            <Col key={post.id} className="my-2">
-              <SinglePost post={post} />
+            <Col className="my-2">
+              <SinglePost post={post} page="dashboard" />
             </Col>
           ))}
         </Row>

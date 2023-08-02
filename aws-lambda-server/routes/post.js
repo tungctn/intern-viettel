@@ -37,4 +37,8 @@ router.put("/:id", verifyToken, PostController.updatePost);
 // deletePost
 router.delete("/:id", verifyToken, PostController.deletePost);
 
+// @route PUT api/posts/like/:id
+// likePost
+router.put("/like/:id", verifyToken, PostController.likePost);
+
 module.exports = router;

@@ -3,6 +3,12 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { v4: uuidv4 } = require("uuid");
+const { dynamodb } = require("../utils/db.config");
+const { convertObject } = require("../utils/object.convert");
+
+let params = {
+  TableName: "users",
+};
 
 const AuthController = {
   login: async (req, res) => {
@@ -31,7 +37,10 @@ const AuthController = {
 
       const accessToken = jwt.sign(
         { userId: user[0].id },
-        process.env.JWT_SECRET
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "365d",
+        }
       );
 
       return res.json({
@@ -95,13 +104,23 @@ const AuthController = {
 
   auth: async (req, res) => {
     try {
-      const user = await User.scan("id").eq(req.userId).exec();
+      const user = await dynamodb
+        .scan({
+          ...params,
+          FilterExpression: "id = :userId",
+          ExpressionAttributeValues: {
+            ":userId": {
+              S: req.userId,
+            },
+          },
+        })
+        .promise();
       if (user.length === 0)
         return res
           .status(400)
           .json({ success: false, message: "User not found" });
 
-      return res.json({ success: true, user: user[0] });
+      return res.json({ success: true, user: convertObject(user.Items[0]) });
     } catch (error) {
       console.log(error);
       res

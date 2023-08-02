@@ -43,6 +43,9 @@ phases:
       - REACT_APP_CLIENT_ID=$(aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`ClientId`].OutputValue' --output text)
       - echo $REACT_APP_CLIENT_ID
       - echo $REACT_APP_CLIENT_ID >> .env
+      - REACT_APP_USERPOOL_ID=$(aws cloudformation describe-stacks --stack-name intern-viettel --query 'Stacks[0].Outputs[?OutputKey==`UserPoolId`].OutputValue' --output text)
+      - echo $REACT_APP_CLIENT_ID
+      - echo $REACT_APP_CLIENT_ID >> .env
       - echo Build started on 'date'
       - npm run build
 

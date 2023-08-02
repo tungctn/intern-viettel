@@ -6,10 +6,14 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@uiw/react-md-editor": "^3.23.3",
     "amazon-cognito-identity-js": "^6.3.1",
     "aws-sdk": "^2.1415.0",
     "axios": "^1.4.0",
     "bootstrap": "^4.6.2",
+    "emoji-mart": "^5.5.2",
+    "emoji-picker-react": "^4.4.10",
+    "file-saver": "^2.0.5",
     "firebase": "^10.0.0",
     "postcss": "^8.4.25",
     "postcss-safe-parser": "^6.0.0",
@@ -20,7 +24,11 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "redis": "^4.6.7",
+    "socket.io-client": "^4.7.1",
+    "styled-components": "^6.0.5",
+    "web-vitals": "^2.1.4",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.3"
   }
 }

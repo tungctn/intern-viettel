@@ -3,28 +3,47 @@ import playIcon from "../../assets/play-btn.svg";
 import editIcon from "../../assets/pencil.svg";
 import deleteIcon from "../../assets/trash.svg";
 import { PostContext } from "../../contexts/PostContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
-const ActionButtons = ({ url, id }) => {
-  const { deletePost, findPost, setShowUpdatePostModal } =
+const ActionButtons = ({ id, likes, page }) => {
+  const { deletePost, findPost, setShowUpdatePostModal, likePost } =
     useContext(PostContext);
-
-  const choosePost = (postId) => {
-    findPost(postId);
-    setShowUpdatePostModal(true);
+  const { loadUser } = useContext(AuthContext);
+  const [like, setLike] = useState(likes?.length || 0);
+  const choosePost = async () => {
+    const response = await likePost(id);
+    if (response.success) {
+      setLike(like + 1);
+    }
   };
 
   return (
     <>
-      <Button className="post-button" href={url} target="_blank">
-        <img src={playIcon} alt="play" width="32" height="32" />
+      <Button
+        className="post-button"
+        onClick={() => {
+          likePost(id);
+        }}>
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkMO5kUM9Ym5PggFKatlS6GFIj-rtDUgIqcQ&usqp=CAU"
+          alt="delete"
+          width="24"
+          height="24"
+        />
+        <span
+          style={{
+            color: "#31a87e",
+            marginLeft: "5px",
+          }}>
+          {like}
+        </span>
       </Button>
-      <Button className="post-button" onClick={choosePost.bind(this, id)}>
-        <img src={editIcon} alt="edit" width="24" height="24" />
-      </Button>
-      <Button className="post-button" onClick={deletePost.bind(this, id)}>
-        <img src={deleteIcon} alt="delete" width="24" height="24" />
-      </Button>
+      {page === "dashboard" && (
+        <Button className="post-button" onClick={deletePost.bind(this, id)}>
+          <img src={deleteIcon} alt="delete" width="24" height="24" />
+        </Button>
+      )}
     </>
   );
 };

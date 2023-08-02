@@ -13,15 +13,17 @@ const RegisterForm = () => {
 
   // Local state
   const [registerForm, setRegisterForm] = useState({
-    username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    firstName: "",
+    lastName: "",
   });
 
   const [alert, setAlert] = useState(null);
 
-  const { username, password, confirmPassword, email } = registerForm;
+  const { firstName, lastName, password, confirmPassword, email } =
+    registerForm;
 
   const onChangeRegisterForm = (event) =>
     setRegisterForm({
@@ -38,15 +40,12 @@ const RegisterForm = () => {
     }
 
     try {
-      const registerData = await registerUser(registerForm);
-      // if (!registerData.success) {
-      //   setAlert({ type: "danger", message: registerData.message });
-      //   setTimeout(() => setAlert(null), 5000);
-      // } else {
+      await registerUser(registerForm);
+      console.log("registerForm", registerForm);
       history.push("/confirm");
       localStorage.setItem("email", email);
-      localStorage.setItem("username", username);
-      // }
+      localStorage.setItem("firstName", firstName);
+      localStorage.setItem("lastName", lastName);
     } catch (error) {
       console.log(error);
     }
@@ -61,9 +60,19 @@ const RegisterForm = () => {
           <Form.Control
             type="text"
             placeholder="Username"
-            name="username"
+            name="firstName"
             required
-            value={username}
+            value={firstName}
+            onChange={onChangeRegisterForm}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Control
+            type="text"
+            placeholder="Username"
+            name="lastName"
+            required
+            value={lastName}
             onChange={onChangeRegisterForm}
           />
         </Form.Group>
