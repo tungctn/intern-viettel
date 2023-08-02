@@ -109,7 +109,6 @@ const Profile = () => {
                   </div>
 
                   <div className="flex-grow-1 ms-3 ml-4">
-                    {/* <Card.Title>{user1.name}</Card.Title> */}
                     <Card.Text>{`${user.firstName} ${user.lastName}`}</Card.Text>
 
                     <div

@@ -2,9 +2,11 @@ import React, { useContext, useState } from "react";
 import "./ChatBox.css";
 import { Image } from "react-bootstrap";
 import { ChatContext } from "../../contexts/ChatContext";
+import EmojiPicker from "emoji-picker-react";
 
 const ChatBox = ({ socket, user, room, messages, selectedUser }) => {
   const [currentMessage, setCurrentMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State to control emoji picker
   const { createMessage } = useContext(ChatContext);
   const sendMessage = async () => {
     console.log(user.id);
@@ -15,14 +17,7 @@ const ChatBox = ({ socket, user, room, messages, selectedUser }) => {
         author: `${user.id}`,
         message: currentMessage,
       };
-      const response = await createMessage(
-        messageData.message,
-        messageData.room
-      );
-      if (response.success) {
-        console.log("Message sent");
-        socket.emit("send_message", messageData);
-      }
+      socket.emit("send_message", messageData);
       setCurrentMessage("");
     }
   };
@@ -31,6 +26,11 @@ const ChatBox = ({ socket, user, room, messages, selectedUser }) => {
       event.preventDefault();
       sendMessage();
     }
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    console.log(emoji.emoji);
+    setCurrentMessage(currentMessage + emoji.emoji);
   };
 
   return (
@@ -44,16 +44,28 @@ const ChatBox = ({ socket, user, room, messages, selectedUser }) => {
       </div>
       <div className="chat-body">
         {messages.map((msg, idx) => {
+          const isCurrentUser = msg.author === user.id;
           return (
             <div
               key={idx}
               className={`message-row ${
-                msg.author === user.id ? "you-message" : "other-message"
+                isCurrentUser ? "you-message" : "other-message"
               }`}>
-              {msg.author !== user.id && (
-                <Image src={user?.img} roundedCircle className="chat-image" />
+              {!isCurrentUser && (
+                <Image
+                  src={selectedUser?.img}
+                  roundedCircle
+                  className="chat-image"
+                />
               )}
-              <p className="message-content">{msg.message}</p>
+              <p
+                className={`message-content ${
+                  isCurrentUser
+                    ? "you-message-content"
+                    : "other-message-content"
+                }`}>
+                {msg.message}
+              </p>
             </div>
           );
         })}
@@ -70,10 +82,24 @@ const ChatBox = ({ socket, user, room, messages, selectedUser }) => {
           value={currentMessage}
           onKeyDown={handleKeyDown}
         />
+        {/* Add a button to toggle emoji picker */}
+        <button
+          style={{ border: "none", fontSize: "20px" }}
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+          😆
+        </button>
         <button className="chat-button" onClick={sendMessage}>
           Send
         </button>
       </div>
+      {/* Render the emoji picker */}
+      {showEmojiPicker && (
+        <EmojiPicker
+          onEmojiClick={handleEmojiSelect}
+          lazyLoadEmojis={true}
+          searchPlaceHolder="Emoji"
+        />
+      )}
     </div>
   );
 };

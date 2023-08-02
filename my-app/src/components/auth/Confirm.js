@@ -47,7 +47,6 @@ const Confirm = () => {
             required
             onChange={(event) => {
               setConfirmCode(event.target.value);
-              console.log(event.target.value);
             }}
           />
         </Form.Group>

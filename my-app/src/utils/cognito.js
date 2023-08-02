@@ -10,6 +10,4 @@ const cognito = new AWS.CognitoIdentityServiceProvider({
   apiVersion: "2016-04-18",
 });
 
-// cognito set expried token
-
 export default cognito;

@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: >
+  Project intern viettel
+
+Globals:
+  Function:
+    Timeout: 600
+  Api:
+    TracingEnabled: true
+
+Resources:
+  StorageChatLogApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      BinaryMediaTypes: ["*/*"]
+
+  StorageChatLogFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Role: !GetAtt FunctionStorageChatLogRole.Arn
+      Events:
+        StorageChatLogApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            RestApiId: !Ref StorageChatLogApi
+      Environment:
+        Variables:
+          BUCKET_CHATLOG: !Ref StorageChatLog
+
+  FunctionStorageChatLogRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+      - PolicyName: StorageChatLogFunctionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - sns:*
+              Resource: "*"
+  
+  StorageChatLog:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: !Sub intern-viettel-chat-log
+      AccessControl: BucketOwnerFullControl
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+        
+  StorageDataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StorageChatLog
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageChatLog}/*
+            Principal: "*"
+          - Action:
+              - s3:PutObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageChatLog}/*
+            Principal: "*"
+          - Action:
+              - s3:DeleteObject
+            Effect: Allow
+            Resource: !Sub arn:aws:s3:::${StorageChatLog}/*
+            Principal: "*"
+
+  InvokeLambdaFunction:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref StorageChatLogFunction
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+
+
+Outputs:
+  StorageChatLogApi: 
+    Description: StorageChatLogApi
+    Value: !Ref StorageChatLogApi
+
+  StorageChatLog:
+    Description: StorageChatLog
+    Value: !Ref StorageChatLog
+
+

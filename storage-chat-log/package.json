@@ -1,5 +1,5 @@
 {
-  "name": "socket-io",
+  "name": "storage-chat-log",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,11 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "@vendia/serverless-express": "^4.10.4",
-    "aws-sdk": "^2.1427.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "http": "^0.0.1-security",
-    "nodemon": "^3.0.1",
-    "socket.io": "^4.7.1"
+    "nodemon": "^3.0.1"
   }
 }
